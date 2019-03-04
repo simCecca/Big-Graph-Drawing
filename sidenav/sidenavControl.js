@@ -11,7 +11,7 @@ class Controller {
         if (processor === "CPU") {
             let width = window.screen.availWidth * 0.97;
             let height = window.screen.availHeight;
-            d3.select('#svgdiv').html('<svg id="svgCanvas" width= "" height=' + height*0.8 + 'px style=" border : 1px solid gray; background-color: white" transform="translate(0,50)"></svg>');
+            d3.select('#svgdiv').html('<svg id="svgCanvas" width= "100%" height=' + height*0.8 + 'px style=" border : 1px solid gray; background-color: white" transform="translate(0,50)"></svg>');
             this.renderer = new Renderer();
         }
         else{
