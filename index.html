@@ -57,6 +57,10 @@
                         <select id="inputState" class="form-control" onchange="ctrl.onAvailableGraphs(this.value)">
                             <option value="" selected disabled>Choose a predefined graph</option>
                             <option value="./AvailableGraphs/astroph.json">Astro-Physics - collaboration network of Arxiv Astro Physics [nodes: 18,772   edges: 198,110]</option>
+                            <option value="./AvailableGraphs/internet.json">Internet [nodes: 22,963   edges: 48436]</option>
+                            <option value="./AvailableGraphs/asOregon.json">AS peering information inferred from Oregon route-views [nodes: 11,461   edges: 32,730]</option>
+                            <option value="./AvailableGraphs/email.json">Email network [nodes: 1,005   edges: 25,571]</option>
+                            <option value="./AvailableGraphs/gnutellap2p31.json">p2p network - Gnutella peer to peer network from August 31 2002 [nodes: 62,586   edges: 147,892]</option>
                             <option value="./AvailableGraphs/amazon601.json">Amazon601: Amazon product co-purchasing network from June 1 2003 [nodes: 403,394   edges: 3,387,388]</option>
                         </select>
                     </div>
@@ -71,7 +75,7 @@
             <text id = "dialogText" x="0" y ="55%" font-size="20" font-weight="bold" dominant-baseline="alphabetic" fill= "gray">Waiting for a graph</text>
         </svg>
         <hr class="my-4">
-        <div class="row">
+        <div class="row buttons-row">
             <div class = "col">
                 <button type = "button" class="btn btn-warning" onclick="ctrl.stopZoom()" data-toggle="tooltip" data-placement="top" title="In a realistic zoom you should resize properly all the objects in the window, but if you have many objects the time required become important, then clicking this button will have a linear zoom, but much faster" >
                     Stop Resizing Zoom

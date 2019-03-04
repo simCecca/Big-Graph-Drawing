@@ -289,8 +289,9 @@ class Renderer {
     renderBiconnectedGraph(bc, i, zoom = 1){
         bc.nodes.forEach((children) => {
             if(children.biconnectedGraph !== null) {
-                let nodes_to_renderer =  children.biconnectedGraph.nodes.slice(0, Math.floor(zoom) + 2000);
+                let nodes_to_renderer =  children.biconnectedGraph.nodes.slice(0, Math.floor(zoom) + 500);
                 this.renderNodes(this.svgMaxOrder, nodes_to_renderer, i, zoom);
+                if(children.root) console.log(children);
                 nodes_to_renderer.forEach( n => {this.renderEdges(this.edgesSvgs[Math.floor(Math.random() * 50) % 3], n.edges)});
             }
         });

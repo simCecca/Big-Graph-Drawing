@@ -284,7 +284,7 @@ class DrawAlgorithm{
                 let radiant = 0;
                 let radiantSteps = 6.28 / node.biconnectedGraph.nodes.length;
                 //for the fakes points
-                let currentRadiant = 0, steps = 6.28 / node.biconnectedGraph.nodes.length;
+                let currentRadiant = 0, steps = 60.28 / node.biconnectedGraph.nodes.length;
                 node.biconnectedGraph.nodes.forEach((children, index) => {
                     children.dimension = 1;
                     //children.dimension = Math.log10(children.size) / node.biconnectedGraph.maxOrderIntheMap;
@@ -300,7 +300,7 @@ class DrawAlgorithm{
                     children.y = y;
                     radiant += radiantSteps;
                     currentRadiant += steps;
-                    if(node.sizeNodes > 10000)this.assignTheCoordinatesToTheEdgesOfTheCurrentBlok(node, children);
+                    if(node.sizeNodes > cc.root.sizeNodes * 0.5)this.assignTheCoordinatesToTheEdgesOfTheCurrentBlok(node, children);
                 });
                 node.biconnectedGraph.rankingOfTheNodes();
             }
