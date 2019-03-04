@@ -1,0 +1,11 @@
+line {
+    /*stroke: black;*/
+    /*stroke-width: 0.3px;*/
+}
+
+circle {
+    /*fill: orangered;*/
+    /*stroke-width: 0.1px;*/
+    stroke: transparent;
+    transform-origin: center;
+}
