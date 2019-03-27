@@ -4,6 +4,7 @@ class Renderer {
     constructor() {
         this.svg = d3.select("#svgCanvas");
         this.svgElement = this.svg.append("g");
+        this.svgNodes = this.svgElement.append("g").attr("id", "nodes");
         this.svgCones = this.svgElement.append("g").attr("id", "cones");
         this.svgEdgesMin = this.svgElement.append("g").attr("id", "edgesMin");
         this.svgConesMin = this.svgElement.append("g").attr("id", "conesMin");
@@ -12,7 +13,7 @@ class Renderer {
         this.edgesFromCutV = this.svgElement.append("g").attr("id", "edgesFromCutV");
         this.svgEdgesMax = this.svgElement.append("g").attr("id", "edgesMax");
 
-        this.svgNodes = this.svgElement.append("g").attr("id", "nodes");
+
         this.svgMaxOrder = this.svgElement.append("g").attr("id", "maxOrder");
         this.edgesSvgs = [this.svgEdgesMin, this.svgEdgesMedium, this.svgEdgesMax];
         this.conesSvgs = [this.svgCones, this.svgConesMin, this.svgConesMedium];
@@ -22,7 +23,7 @@ class Renderer {
         this.algorithm = new DrawAlgorithm(this.width, this.height); // Dummy graph
         this.isJustCreatedTheRectForTheZoom =false;
         this.zoomStop = 0;
-        this.previousScale = 1;
+        this.previousScale = {k: 1, x: 0, y: 0};
     }
 
     async setGraph(graph) {
@@ -49,6 +50,62 @@ class Renderer {
         });
     }
 
+    //take in input a node and the connected component that contain this node and draw the information of this node
+    drawInfoOfThisNode(node, cc){
+        let color = "rgb(170,170,100)";
+        let dimension = node.currentDimension * 2, minDimension = this.graph.graph[cc].root.currentDimension * 0.33;
+        if(dimension < this.graph.graph[cc].root.currentDimension * 0.33)
+            dimension = minDimension;
+        let fontSize = ((node.root) ? dimension / 10 : dimension/3);
+        let nodesText = "Nodes: " + node.sizeNodes;
+        let edgesText = "Edges: " + node.size;
+        let nameText = "Name: " + node.name;
+        let dataText = [ edgesText, nodesText, nameText ];
+        let offset = -fontSize * 1.5;
+        this.svgMaxOrder.append("rect")
+            .attr("width", fontSize * (2 + node.name.length))
+            .attr("height", fontSize * 4)
+            .attr("x", node.x + node.currentDimension + fontSize * 2)
+            .attr("y", node.y - fontSize * 2)
+            .attr("stroke", "#5b3a29")
+            .attr("stroke-opacity", "0.4")
+            .attr("fill-opacity", "0.4")
+            .attr("stroke-width", "0.2em");
+        this.svgMaxOrder.selectAll("text")
+            .data(dataText)
+            .enter()
+            .append("text")
+            .attr("x", node.x + node.currentDimension + fontSize * 3.5)
+            .attr("y", () => {offset += fontSize; return node.y + offset})
+            .attr("font-size", fontSize + "px")
+            .attr("fill", "white")
+            .attr("font-family", "Comic Sans MS")
+            .text((d) => d);
+    }
+
+    renderBiconnectedBlocks(svg, nodes, cc, zoom = 1){
+        const svgNodes = svg.selectAll("circle")
+            .data(nodes, node => node.getId());
+
+        svgNodes.enter()
+            .append("circle")
+            .attr("id", node => node.getId())
+            .on("mouseover", (node, i, nodes) => {
+                this.drawInfoOfThisNode(node, cc);
+                })
+            .on("mouseout", (node, i, nodes) => {
+                this.svgMaxOrder.selectAll("text").remove();
+                this.svgMaxOrder.selectAll("rect").remove();
+            })
+            .attr('fill', node => 'rgb(230,230,230)')
+            .attr("cx", node => node.x)
+            .attr("cy", node => node.y)
+            .merge(svgNodes)
+            .attr("r", node => {
+                return node.root ? node.dimension + 1 : node.dimension;
+            })
+            .attr("stroke-width", 0.1/zoom);
+    }
     renderNodes(svg, nodes, cc, zoom = 1) {
         const svgNodes = svg.selectAll("circle")
             .data(nodes, node => node.getId());
@@ -62,35 +119,20 @@ class Renderer {
                    d3.select(nodes[i]).transition().duration(100).attr("r", node => node.currentDimension * 2);
                    if(node.cutVertexNeighboursFirst.length > 0){
                        node.cutVertexNeighboursFirst.forEach((e) => {
-                           e.setIntermediateCoordinates();
+                           e.setIntermediateCoordinatesBetweenCutVerteces();
                        });
                        this.drawEdgesbetweenConeAndCircle(node.cutVertexNeighboursFirst, zoom, 500);
                    }
                 }
-                this.svgNodes.append("text")
-                    .attr("x", node.x + node.currentDimension * 2)
-                    .attr("y", node.y + node.currentDimension * 2)
-                    .attr("font-size", () =>
-                    {
-                        let dimension = node.currentDimension * 2, minDimension = this.graph.graph[cc].root.currentDimension * 0.33;
-                        if(dimension < this.graph.graph[cc].root.currentDimension * 0.33)
-                            dimension = minDimension;
-                        return (dimension/2) + "px";
-                    })
-                    .attr("fill", "grey")
-                    .text("Edges " + somma + " Nodes " + node.sizeNodes + " Name: " + node.name);
+                this.drawInfoOfThisNode(node, cc);
             })
             .on("mouseout", (node, i, nodes) => {
                 if(!node.isABNode) {
                     d3.select(nodes[i]).transition().duration(100).attr("r", node => node.currentDimension);
-                    d3.select("#" + node.father.getId()).transition().duration(100).attr("r", n => (n.root) ? 0 : n.currentDimension);
-                    //emove the edges from the childrens
-                    node.getNeighbours().forEach((children) => {
-                        d3.select("#" + children.getId()).transition().duration(100).attr("r", n => n.currentDimension);
-                    });
                 }
 
-                this.svgNodes.select("text").remove();
+                this.svgMaxOrder.selectAll("text").remove();
+                this.svgMaxOrder.selectAll("rect").remove();
                 this.edgesFromCutV.selectAll("polygon").remove();
                 this.edgesFromCutV.selectAll("path").remove();
 
@@ -100,8 +142,8 @@ class Renderer {
                 .on("drag", node => {node.x = d3.event.x; node.y = d3.event.y; /*this.renderEdges(node.edges);*/ this.renderNodes(this.svgNodes, [node], cc); /*this.renderCones(node.cones, cc);*/}))
             .on("click", (nodeObject, i, nodes) => { const name = (nodeObject.getSPQRTree() != undefined) ? nodeObject.getSPQRTree().root.getId() : "ciao"; console.log((name.includes("p") ? "P" : name.includes("s") ? "S" : name.includes("r") ? "R" : "noValue"));})
             .attr('fill', node => {
-                let color = 'transparent';
-                (!node.isABNode || node.innerNode) ?  color = 'rgb(50,50,50)' : (node.isBlack) ? color = 'dark' : color = 'transparent'; return color;
+                let color = 'rgb(230,230,230)';
+                (!node.isABNode || node.innerNode) ?  color = 'rgb(50,50,50)' : (node.isBlack) ? color = 'dark' : color; return color;
             })
             .merge(svgNodes)
             .attr("cx", node => node.x)
@@ -120,7 +162,8 @@ class Renderer {
                         if (zoom * 0.293 >= 2 && this.zoomStop === 0)
                             node.currentDimension = ((node.dimension / (zoom * 0.293)));
                     }
-                    return (node.root) ? 0 : node.currentDimension;
+                    //return (node.root) ? 0 : node.currentDimension;
+                    return node.currentDimension;
 
         })
             .attr("stroke-width", 0.1/zoom);
@@ -164,21 +207,36 @@ class Renderer {
 
     renderEdges(svg, edges, zoom = 1) {
         //const svgEdges = this.svgEdges.selectAll("line")
-        const svgEdges = svg.selectAll("line")
+        const svgEdges = svg.selectAll("path")
             .data(edges, edge => edge.id); // edges aren't going to change...
-
+        //console.log(edges);
         svgEdges.enter()
-            .append("line")
+            .append("path")
             .merge(svgEdges)
-            .attr("x1", edge => edge.source.x)
-            .attr("y1", edge => edge.source.y)
+            .attr("d", cutV =>  "M" + cutV.x1 + " " + cutV.y1 + " C " + cutV.x3 + " " + cutV.y3 + ", " + cutV.x4 + " " + cutV.y4 + ", " + cutV.x2 + " " + cutV.y2)
             //.attr("x2", edge => {if(edge.color === "red") this.algorithm.edgesFromCutVertexToBlocks(edge.source, edge.target, 0); return edge.target.x;})
-            .attr("x2", edge => edge.target.x)
-            .attr("y2", edge => edge.target.y)
             .attr("id", edge =>  edge.id)
+            .attr("fill", "transparent")
             .attr("stroke", edge => edge.color)
-            .attr("stroke-width", 0.3/zoom);
+            .attr("stroke-width", 0.1 / zoom);
     }
+
+    // renderEdges(svg, edges, zoom = 1) {
+    //     //const svgEdges = this.svgEdges.selectAll("line")
+    //     const svgEdges = svg.selectAll("line")
+    //         .data(edges, edge => edge.id); // edges aren't going to change...
+    //     svgEdges.enter()
+    //         .append("line")
+    //         .merge(svgEdges)
+    //         .attr("x1", edge => edge.source.x)
+    //         .attr("y1", edge => edge.source.y)
+    //         //.attr("x2", edge => {if(edge.color === "red") this.algorithm.edgesFromCutVertexToBlocks(edge.source, edge.target, 0); return edge.target.x;})
+    //         .attr("x2", edge => edge.target.x)
+    //         .attr("y2", edge => edge.target.y)
+    //         .attr("id", edge =>  edge.id)
+    //         .attr("stroke", edge => edge.color)
+    //         .attr("stroke-width", 0.3/zoom);
+    // }
 
 
     renderCones(svg, cones, cc, zoom = 0){
@@ -224,15 +282,26 @@ class Renderer {
         // d3.event.transform have 3 fields k == scale, x and y
         //rescale all the graph
         //this.svgElement = this.svg.append("g");
-        this.svgElement.attr("transform", d3.event.transform);
-
-        if(d3.event.transform.k !== this.previousScale && d3.event.transform.k > 2 && !this.zoomStop) {
-            //rescale all the nodes & edges
-            this.renderNodes(this.svgNodes, this.graph.graph[0].getNodes(), 0, d3.event.transform.k);
-            this.renderBiconnectedGraph(this.graph.graph[0], 0, d3.event.transform.k);
-            this.renderObjectsAlternatingInTheBlock(this.graph.graph[0].cones, 0, d3.event.transform.k);
-            this.previousScale = d3.event.transform.k;
+        if(!this.zoomStop)
+        {
+            if (d3.event.transform.k > 2) {
+                //rescale all the nodes & edges
+                d3.event.transform.k = this.previousScale.k;
+                d3.event.transform.x = this.previousScale.x;
+                d3.event.transform.y = this.previousScale.y;
+            }
         }
+        this.svgElement.attr("transform", d3.event.transform);
+        this.previousScale.k = d3.event.transform.k;
+        this.previousScale.x = d3.event.transform.x;
+        this.previousScale.y = d3.event.transform.y;
+        // if(d3.event.transform.k !== this.previousScale && d3.event.transform.k > 2 && !this.zoomStop) {
+        //     //rescale all the nodes & edges
+        //     this.renderNodes(this.svgNodes, this.graph.graph[0].getNodes(), 0, d3.event.transform.k);
+        //     this.renderBiconnectedGraph(this.graph.graph[0], 0, d3.event.transform.k);
+        //     this.renderObjectsAlternatingInTheBlock(this.graph.graph[0].cones, 0, d3.event.transform.k);
+        //     this.previousScale = d3.event.transform.k;
+        // }
     }
 
     render() {
@@ -242,15 +311,18 @@ class Renderer {
                 //this.renderEdges(this.svgEdges, connectedComponent.getEdges());
                 //draw only the cutVertex and the node of the biconnected components
                 let cutVToDraw = [];
+                let blocks = [];
                 connectedComponent.getNodes().forEach(n => {
                     if(!n.isABNode || n.isBlack)
                         cutVToDraw.push(n);
+                    if(n.isABNode)
+                        blocks.push(n);
                 });
-                this.renderNodes(this.svgNodes, cutVToDraw, i);
-                console.log("nodes");
-                //this.renderNodes(this.svgNodes, connectedComponent.getNodes(), i);
+                this.renderNodes(this.svgMaxOrder, cutVToDraw, i);
+                console.log("finished the nodes rendering");
+                this.renderBiconnectedBlocks(this.svgNodes, blocks, i);
                 this.renderBiconnectedGraph(connectedComponent, i);
-                console.log("biconnected graph");
+                console.log("finished the biconnected graph rendering");
                 this.renderObjectsAlternatingInTheBlock(connectedComponent.cones, i);
                 console.log("coni");
                 //this.renderCones(connectedComponent.cones, i);
@@ -289,7 +361,7 @@ class Renderer {
     renderBiconnectedGraph(bc, i, zoom = 1){
         bc.nodes.forEach((children) => {
             if(children.biconnectedGraph !== null) {
-                let nodes_to_renderer =  children.biconnectedGraph.nodes.slice(0, Math.floor(zoom) + 500);
+                let nodes_to_renderer =  children.biconnectedGraph.nodes.slice(0, (children.root) ? 3000 : 5);
                 this.renderNodes(this.svgMaxOrder, nodes_to_renderer, i, zoom);
                 if(children.root) console.log(children);
                 nodes_to_renderer.forEach( n => {this.renderEdges(this.edgesSvgs[Math.floor(Math.random() * 50) % 3], n.edges)});

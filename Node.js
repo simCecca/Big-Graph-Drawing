@@ -28,7 +28,7 @@ class Node{
         this.weightForChildren = 0;
         this.minWidth = 0;
         this.dimension = 5;
-
+        this.currentDimension = 0;
         //condition
         this.isBlack = false;
         this.root = false;
@@ -82,6 +82,10 @@ class Node{
         if(this.innerNode)
             return this.size;
         return this.children.length;
+    }
+
+    getCurrentDimension(){
+        return (this.currentDimension === 0) ? this.dimension : this.currentDimension;
     }
 
     /*to the question: when is it better to refine the SPQRTree? I think the answer is now, after it's assignment*/

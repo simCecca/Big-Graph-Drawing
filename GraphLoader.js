@@ -176,6 +176,7 @@ class GraphLoader{
                 let currentCutV = id2connectedComponents.get(currentCC.concat("cutv" + key));
                 value.forEach(([son, block]) => {
                     let currentSon = id2connectedComponents.get(currentCC.concat("cutv" + son));
+                    //these are the edges between cut-vertex so that verteces that connect cut-verteces together
                     let e1 = new Edge(currentCutV, currentSon, "rgb(0,0,0)", id2BiconnectedBlocks.get(currentCC.concat("bc" + block)));
                     currentCutV.cutVertexNeighboursFirst.push(e1);
                     let c = currentCutV.conesMap.get(e1.id);

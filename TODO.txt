@@ -1,0 +1,10 @@
+[x] edges inside the blocks must be curved
+[x] each block must have a gray circle below it
+    [x] - may the circle should contain also it's cut-vertexes
+    [] - may the circle should be bigger as it's radius (dimension * 0.8)
+[x] remove the aliasing of the path curves
+[x] zoom not over 2x
+[x] add the block descriptions on mouse over
+[] tuning the color & size of the nodes description
+[x] orders the nodes within the blocks to have the biggest ones in the middle and the others around
+[x] increase the size of the cones

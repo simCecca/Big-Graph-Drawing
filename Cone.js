@@ -41,10 +41,11 @@ class Cone{
         this.cDimension = this.target.currentDimension * this.size / this.target.maxConeSize;
         this.dimensionThreshold =(this.target.root) ? this.cDimension / 4 : this.cDimension;//(this.cDimension < (this.target.currentDimension / 2)) ? this.cDimension : this.target.currentDimension / 2;
         if(this.dimensionThreshold === 0) this.dimensionThreshold = 1;
-        this.p1 = [this.source.x, this.source.y];
-        this.p2 = [this.target.x + this.dimensionThreshold * Math.cos(this.currentAlphaPoint2), this.target.y + this.dimensionThreshold * Math.sin(this.currentAlphaPoint2)];
-        this.p3 = [this.target.x + this.dimensionThreshold * Math.cos(this.currentAlphaPoint3), this.target.y + this.dimensionThreshold * Math.sin(this.currentAlphaPoint3)];
-        this.points = ""+ this.p1[0] + "," + this.p1[1] + " " + this.p2[0] + "," + this.p2[1] + " " + this.p3[0] + "," + this.p3[1];
+        this.p1 = [this.source.x + Math.cos(this.currentAlphaPoint3) * 0.1, this.source.y + Math.sin(this.currentAlphaPoint3) * 0.1];
+        this.p2 = [this.source.x + Math.cos(this.currentAlphaPoint2) * 0.1, this.source.y + Math.sin(this.currentAlphaPoint2) * 0.1];
+        this.p3 = [this.target.x + this.dimensionThreshold * Math.cos(this.currentAlphaPoint2), this.target.y + this.dimensionThreshold * Math.sin(this.currentAlphaPoint2)];
+        this.p4 = [this.target.x + this.dimensionThreshold * Math.cos(this.currentAlphaPoint3), this.target.y + this.dimensionThreshold * Math.sin(this.currentAlphaPoint3)];
+        this.points = ""+ this.p1[0] + "," + this.p1[1] + " " + this.p2[0] + "," + this.p2[1] + " " + this.p3[0] + "," + this.p3[1] + " " + this.p4[0] + "," + this.p4[1];
         return this.points;
     }
 

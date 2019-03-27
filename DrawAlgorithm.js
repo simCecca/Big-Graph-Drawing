@@ -280,18 +280,26 @@ class DrawAlgorithm{
         cc.nodes.forEach((node) => {
             if(!node.root) node.dimension = (Math.log10(node.getSize()) / Math.log10(cc.getMaxSize())) * 20;//set the dimension of each node, for calculating this parameter it is needed the sixe of the max element in the graph
             if(node.biconnectedGraph !== null){//null and not undefined because in the node's class it is set by default at null
-                let raggio = node.dimension; //steps of the raggio
+                let raggio = node.dimension * 0.79; //steps of the raggio
                 let radiant = 0;
                 let radiantSteps = 6.28 / node.biconnectedGraph.nodes.length;
                 //for the fakes points
                 let currentRadiant = 0, steps = 60.28 / node.biconnectedGraph.nodes.length;
+                let firstR = raggio / 3, secondR = raggio / 3;
+                node.biconnectedGraph.rankingOfTheNodes();
+                let numberOfNodes = node.biconnectedGraph.length;
+                numberOfNodes = numberOfNodes < 3000 ? numberOfNodes : 3000;
                 node.biconnectedGraph.nodes.forEach((children, index) => {
                     children.dimension = 1;
+                    if(index === numberOfNodes / 2){
+                        firstR = raggio * 2 / 3;
+                        secondR = raggio / 3;
+                    }
                     //children.dimension = Math.log10(children.size) / node.biconnectedGraph.maxOrderIntheMap;
                     //a random algorithm draw like a crocie because have a periodic distribution so I generate a fake starting point
-                    let fakeX = node.x + (raggio / 2) * Math.cos(currentRadiant);
-                    let fakeY = node.y + (raggio / 2) * Math.sin(currentRadiant);
-                    let rr = Math.random() * (raggio / 2);
+                    let fakeX = node.x + (firstR) * Math.cos(currentRadiant);
+                    let fakeY = node.y + (firstR) * Math.sin(currentRadiant);
+                    let rr = Math.random() * (secondR);
                     let rd = Math.random() * 6.28;
                     //let x = fakeX + (rr + rr) * (Math.cos(rd));
                     let x = fakeX + (rr) * (Math.cos(rd));
@@ -300,9 +308,8 @@ class DrawAlgorithm{
                     children.y = y;
                     radiant += radiantSteps;
                     currentRadiant += steps;
-                    if(node.sizeNodes > cc.root.sizeNodes * 0.5)this.assignTheCoordinatesToTheEdgesOfTheCurrentBlok(node, children);
+                    if(node.sizeNodes > cc.root.sizeNodes * 0.5) this.assignTheCoordinatesToTheEdgesOfTheCurrentBlok(node, children);
                 });
-                node.biconnectedGraph.rankingOfTheNodes();
             }
         })
     }
@@ -313,11 +320,12 @@ class DrawAlgorithm{
         //for each node I have to create it's edges
         let radiant = 6.28, currentRadiant = 0, radiantStep = 6.28 / numberOfEdges;
         for(let i = 0; i < numberOfEdges; i++){
-            let target = new Node(block.id + " " + node.id + " " + i, false, 0, 0, 0);
-            target.setX(block.x + Math.random() * block.dimension * 0.5 * Math.cos(Math.random() * radiant));
-            target.setY(block.y + Math.random() * block.dimension * 0.5 * Math.cos(Math.random() * radiant));
+            let target = new Node(block.getId() + "" + node.getId() + "" + i, false, 0, 0, 0);
+            target.setX(block.x + Math.random() * block.dimension * 0.3 * Math.cos(Math.random() * radiant));
+            target.setY(block.y + Math.random() * block.dimension * 0.3 * Math.cos(Math.random() * radiant));
             currentRadiant += radiantStep;
-            let currentEdge = new Edge(node, target,"rgb(105,105,105)");
+            let currentEdge = new Edge(node, target,"rgb(105,105,105)", block);
+            currentEdge.assign();
             node.edges.push(currentEdge);
         }
     }
