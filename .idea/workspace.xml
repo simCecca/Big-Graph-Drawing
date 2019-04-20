@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8165e41a-b634-45ae-bad8-5a1bc200cd9c" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/Server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cone.js" beforeDir="false" afterPath="$PROJECT_DIR$/Cone.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DrawAlgorithm.js" beforeDir="false" afterPath="$PROJECT_DIR$/DrawAlgorithm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Edge.js" beforeDir="false" afterPath="$PROJECT_DIR$/Edge.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GraphLoader.js" beforeDir="false" afterPath="$PROJECT_DIR$/GraphLoader.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Node.js" beforeDir="false" afterPath="$PROJECT_DIR$/Node.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/Renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TODO.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/controlStyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/controlStyle.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sidenav/sidenavControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/sidenav/sidenavControl.js" afterDir="false" />
     </list>
@@ -24,20 +24,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.html">
+      <file leaf-file-name="Renderer.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Renderer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
+            <state relative-caret-position="397">
+              <caret line="390" column="110" selection-start-line="390" selection-start-column="110" selection-end-line="390" selection-end-column="110" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Renderer.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Renderer.js">
+      <file leaf-file-name="d3.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/d3.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="70" column="40" selection-start-line="70" selection-start-column="40" selection-end-line="70" selection-end-column="40" />
+            <state relative-caret-position="212">
+              <caret line="4478" column="4" selection-start-line="4478" selection-start-column="4" selection-end-line="4478" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -51,39 +51,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TODO.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TODO.txt">
+      <file leaf-file-name="Node.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Node.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+            <state relative-caret-position="153">
+              <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cone.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Cone.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="473">
-              <caret line="43" column="74" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
-              <caret line="43" column="131" selection-start-line="43" selection-start-column="131" selection-end-line="43" selection-end-column="131" />
-            </state>
-          </provider>
+      <file leaf-file-name="ConnectedComponentsGraph.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ConnectedComponentsGraph.js">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="Edge.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Edge.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="918">
-              <caret line="54" column="87" selection-start-line="54" selection-start-column="87" selection-end-line="54" selection-end-column="87" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sidenavControl.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sidenavControl.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sidenav/sidenavControl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="136" selection-start-line="13" selection-start-column="136" selection-end-line="13" selection-end-column="136" />
+            <state relative-caret-position="340">
+              <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+              <folding>
+                <element signature="n#style#0;n#svg#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -91,40 +80,50 @@
       <file leaf-file-name="GraphLoader.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GraphLoader.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2380">
-              <caret line="140" column="26" selection-start-line="140" selection-start-column="24" selection-end-line="140" selection-end-column="26" />
+            <state relative-caret-position="-1949">
+              <caret line="68" column="4" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Node.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Node.js">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="33" column="17" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="17" />
+            <state relative-caret-position="323">
+              <caret line="117" column="37" lean-forward="true" selection-start-line="117" selection-start-column="37" selection-end-line="117" selection-end-column="37" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DrawAlgorithm.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DrawAlgorithm.js">
+      <file leaf-file-name="Server.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="301" column="55" lean-forward="true" selection-start-line="301" selection-start-column="55" selection-end-line="301" selection-end-column="55" />
+            <state relative-caret-position="68">
+              <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="controlStyle.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/controlStyle.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="534">
+              <caret line="68" column="19" selection-start-line="68" selection-start-column="19" selection-end-line="68" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>window.screen</find>
-      <find>window.screen.availWidth</find>
-      <find>this.width</find>
-      <find>edges</find>
-      <find>math.</find>
-      <find>innerGraph</find>
       <find>Math.lo</find>
       <find>cutVertexNeighboursFirst</find>
       <find>inner</find>
@@ -149,6 +148,12 @@
       <find>drawInfoOfThisNode</find>
       <find>rect</find>
       <find>stro</find>
+      <find>btn-outline-secondary</find>
+      <find>get from</find>
+      <find>load graph</find>
+      <find>exi</find>
+      <find>exit</find>
+      <find>buttons-row</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -158,16 +163,17 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/DialogueBox.js" />
-        <option value="$PROJECT_DIR$/css/controlStyle.css" />
-        <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/GraphLoader.js" />
         <option value="$PROJECT_DIR$/Node.js" />
         <option value="$PROJECT_DIR$/Edge.js" />
-        <option value="$PROJECT_DIR$/sidenav/sidenavControl.js" />
-        <option value="$PROJECT_DIR$/DrawAlgorithm.js" />
         <option value="$PROJECT_DIR$/Cone.js" />
+        <option value="$PROJECT_DIR$/DrawAlgorithm.js" />
         <option value="$PROJECT_DIR$/TODO.txt" />
+        <option value="$PROJECT_DIR$/GraphLoader.js" />
+        <option value="$PROJECT_DIR$/Server.js" />
         <option value="$PROJECT_DIR$/Renderer.js" />
+        <option value="$PROJECT_DIR$/css/controlStyle.css" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/sidenav/sidenavControl.js" />
       </list>
     </option>
   </component>
@@ -177,11 +183,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="405" />
-    <option name="y" value="-20" />
-    <option name="width" value="974" />
-    <option name="height" value="1040" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-10" />
+    <option name="y" value="-10" />
+    <option name="width" value="1940" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -219,7 +225,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/git/Techniques-for-Drawing-Large-Graphs-Based-on-Connectivity/BCTreeDraw" />
     <property name="node.js.detected.package.prettier" value="true" />
     <property name="node.js.path.for.package.prettier" value="project" />
     <property name="node.js.selected.package.prettier" value="" />
@@ -268,34 +274,44 @@
       <workItem from="1553586432823" duration="10000" />
       <workItem from="1553612893807" duration="11964000" />
       <workItem from="1553679794763" duration="15474000" />
+      <workItem from="1553703398550" duration="1716000" />
+      <workItem from="1553845887917" duration="65000" />
+      <workItem from="1553871872305" duration="4777000" />
+      <workItem from="1554198092160" duration="772000" />
+      <workItem from="1554216281118" duration="2439000" />
+      <workItem from="1554275887353" duration="1256000" />
+      <workItem from="1554300371736" duration="1263000" />
+      <workItem from="1554781477518" duration="17225000" />
+      <workItem from="1555168060945" duration="1229000" />
+      <workItem from="1555509200515" duration="19789000" />
+      <workItem from="1555594329918" duration="16969000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="124788000" />
+    <option name="totallyTimeSpent" value="192288000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.17382683" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.059322033" />
+      <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info id="npm" order="0" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,34 +321,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DrawAlgorithm.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4862">
-          <caret line="286" column="50" selection-start-line="286" selection-start-column="50" selection-end-line="286" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1802">
-          <caret line="106" selection-start-line="106" selection-end-line="109" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/controlStyle.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="39" selection-start-line="39" selection-end-line="57" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sidenav/sidenavControl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="46" column="4" selection-start-line="46" selection-start-column="4" selection-end-line="48" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/GraphLoader.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2312">
@@ -585,13 +573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/controlStyle.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="34" column="28" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Edge.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="918">
@@ -599,33 +580,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Node.js">
+    <entry file="file://$PROJECT_DIR$/Cone.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" column="17" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="17" />
+        <state relative-caret-position="731">
+          <caret line="43" column="74" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
+          <caret line="43" column="131" selection-start-line="43" selection-start-column="131" selection-end-line="43" selection-end-column="131" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
+    <entry file="file://$PROJECT_DIR$/TODO.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
+        <state relative-caret-position="238">
+          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sidenav/sidenavControl.js">
+    <entry file="file://$PROJECT_DIR$/DrawAlgorithm.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="136" selection-start-line="13" selection-start-column="136" selection-end-line="13" selection-end-column="136" />
+        <state relative-caret-position="6902">
+          <caret line="406" column="12" selection-start-line="406" selection-start-column="12" selection-end-line="406" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GraphLoader.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2380">
-          <caret line="140" column="26" selection-start-line="140" selection-start-column="24" selection-end-line="140" selection-end-column="26" />
+        <state relative-caret-position="-1949">
+          <caret line="68" column="4" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ConnectedComponentsGraph.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Graph.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -634,32 +619,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DrawAlgorithm.js">
+    <entry file="file://$PROJECT_DIR$/Node.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="301" column="55" lean-forward="true" selection-start-line="301" selection-start-column="55" selection-end-line="301" selection-end-column="55" />
+        <state relative-caret-position="153">
+          <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Cone.js">
+    <entry file="file://$PROJECT_DIR$/d3.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="43" column="74" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
-          <caret line="43" column="131" selection-start-line="43" selection-start-column="131" selection-end-line="43" selection-end-column="131" />
+        <state relative-caret-position="212">
+          <caret line="4478" column="4" selection-start-line="4478" selection-start-column="4" selection-end-line="4478" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TODO.txt">
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+        <state relative-caret-position="-1847">
+          <caret line="15327" column="17" selection-start-line="15327" selection-start-column="17" selection-end-line="15327" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Renderer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="70" column="40" selection-start-line="70" selection-start-column="40" selection-end-line="70" selection-end-column="40" />
+        <state relative-caret-position="397">
+          <caret line="390" column="110" selection-start-line="390" selection-start-column="110" selection-end-line="390" selection-end-column="110" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/controlStyle.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="534">
+          <caret line="68" column="19" selection-start-line="68" selection-start-column="19" selection-end-line="68" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="117" column="37" lean-forward="true" selection-start-line="117" selection-start-column="37" selection-end-line="117" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sidenav/sidenavControl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+          <folding>
+            <element signature="n#style#0;n#svg#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

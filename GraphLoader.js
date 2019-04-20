@@ -1,14 +1,30 @@
 class GraphLoader{
 
-    constructor(){}
+    constructor(){
+        this.server = new Server();
+    }
 
+    //load the wole graph from the server
+    async loadFromServer(graphPath){
+        const graph = await this.server.loadFromServer(graphPath);
+        console.log(graph);
+        return this.loadGraph(graph);
+    }
 
+    //load a single node from the graph taking information by it's block and it's name in the block
+    async loadNodeFromTheServer(graphPath){
+        console.log(graphPath);
+        const node = await this.server.loadFromServer(graphPath);
+        console.log(node);
+        return node;
+    }
+
+    //load from file
     async loadFromFile(file) {
         let json = await this._load(file);
         dialogueBox("loading of the graph");
         await sleep(50);
-        let cc = this.loadGraph(json);
-        return cc;
+        return this.loadGraph(json);
         //now that the file is loaded, call the renderer to plot every kind of plotting
         // let renderer = new Renderer(json);
     }

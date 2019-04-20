@@ -280,7 +280,7 @@ class DrawAlgorithm{
         cc.nodes.forEach((node) => {
             if(!node.root) node.dimension = (Math.log10(node.getSize()) / Math.log10(cc.getMaxSize())) * 20;//set the dimension of each node, for calculating this parameter it is needed the sixe of the max element in the graph
             if(node.biconnectedGraph !== null){//null and not undefined because in the node's class it is set by default at null
-                let raggio = node.dimension * 0.79; //steps of the raggio
+                let raggio = node.dimension * 0.78; //steps of the raggio
                 let radiant = 0;
                 let radiantSteps = 6.28 / node.biconnectedGraph.nodes.length;
                 //for the fakes points

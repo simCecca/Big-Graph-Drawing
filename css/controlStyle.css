@@ -54,5 +54,17 @@
 }
 
 .buttons-row {
-    margin-bottom: -3%;
+    margin-top: 10%;
+}
+
+.drawing-window {
+    margin-top: -3%;
+}
+
+.project-button {
+    float:right;
+}
+
+.reset-button {
+    margin-left: 25%;
 }

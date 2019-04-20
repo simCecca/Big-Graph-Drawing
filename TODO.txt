@@ -8,3 +8,8 @@
 [] tuning the color & size of the nodes description
 [x] orders the nodes within the blocks to have the biggest ones in the middle and the others around
 [x] increase the size of the cones
+
+------------------------------------------------------------------------------------------------------------------------
+
+[] query dove si trova questo vertice?
+[] mostrami questi due nodi e shortest path

@@ -15,6 +15,7 @@
     <script src="Graph.js"></script>
     <script src="ConnectedComponentsGraph.js"></script>
     <script src="GraphLoader.js"></script>
+    <script src="Server.js"></script>
     <script src="GraphUtilities.js"></script>
     <script src="DialogueBox.js"></script>
     <script src="Cone.js"></script>
@@ -44,7 +45,9 @@
         <h1>Large Graphs Drawing Based on Connectivity</h1>
     </div>
     <div class="jumbotron container-custom">
+        <hr class="my-4">
         <form>
+            <p><h5>Loading The Graph:</h5></p>
             <div class="row">
                 <div class="col">
                     <div class="custom-file">
@@ -64,6 +67,20 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <input type="text" id="graphName" class="form-control" placeholder="Write the graph name" aria-label="Write the graph name" aria-describedby="button-addon2">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onGetFromServer()">Get From Server</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
         </form>
         <hr class="my-4">
         <div class = "drawing-status">
@@ -73,6 +90,31 @@
             <text id = "dialogText" x="0" y ="55%" font-size="20" font-weight="bold" dominant-baseline="alphabetic" fill= "gray">Waiting for a graph</text>
         </svg>
         <hr class="my-4">
+        <p><h5>Querying the Graph:</h5></p>
+        <div class="row querying-panel">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <input type="text" id="nodeName" class="form-control" placeholder="Write the node name" aria-label="Write the node name" aria-describedby="button-addon2">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onTakeNodeFromServer()">Get the Node</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onGetFromServer()">Get the Shortest path</button>
+                    </div>
+                    <input type="text" id="startNode" placeholder="Starting node" aria-label="Write the name of the starting node" class="form-control">
+                    <input type="text" id="targetNode" placeholder="Target node" aria-label="Write the name of the target node" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row drawing-window">
+            <div class="col">
+                <div id="svgdiv"></div>
+            </div>
+        </div>
         <div class="row buttons-row">
             <div class = "col">
                 <button type = "button" class="btn btn-warning" onclick="ctrl.stopZoom()" data-toggle="tooltip" data-placement="top" title="In a realistic zoom you should resize properly all the objects in the window, but if you have many objects the time required become important, then clicking this button will have a linear zoom, but much faster" >
@@ -80,15 +122,20 @@
                 </button>
             </div>
             <div class="col">
-                <button type="button" onClick="window.location.reload()" class="btn btn-danger">Reset the inserted fields</button>
+                <button type="button" onClick="window.location.reload()" class="btn btn-danger reset-button">Reset the inserted fields</button>
             </div>
             <div class="col">
-                <button type="button" onClick="window.location='https://github.com/simCecca/Techniques-for-Drawing-Large-Graphs-Based-on-Connectivity/wiki'" class="btn btn-primary">Link to the project</button>
+                <button type="button" onClick="window.location='https://github.com/simCecca/Techniques-for-Drawing-Large-Graphs-Based-on-Connectivity/wiki'" class="btn btn-primary project-button">Link to the project</button>
             </div>
         </div>
-        <div id="svgdiv"></div>
     </div>
 
+    <div id="errorDialog" class="errorDialog">
+        <h1>Ops!</h1>
+        <p id="errorMsg">Hi :) (if you are seeing this message something went wrong but we were too lazy to
+            set an error message for it. If I were you I would open the console)</p>
+        <a href="javascript:void(0)" class="closebtn" onclick="ctrl.closeErrorDialog()">&times;</a>
+    </div>
 
 <br><br><br><br>
 <script src="./sidenav/sidenavControl.js"></script>
