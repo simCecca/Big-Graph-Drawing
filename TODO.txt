@@ -11,5 +11,16 @@
 
 ------------------------------------------------------------------------------------------------------------------------
 
-[] query dove si trova questo vertice?
-[] mostrami questi due nodi e shortest path
+[x] query dove si trova questo vertice?
+[x] mostrami questi due nodi e shortest path
+
+------------------------------------------------------------------------------------------------------------------------
+
+[x] allowing a zoom in relation of the display size that is drawing the graph
+[x] review the drawing algorithm of the blocks when you are drawing a very little subset of the real set of the nodes
+[] better animation for the shortest path
+[] the edges of the shortest path should be curved
+[] C++  ==>  name of the nodes should be the same of the real name of the node
+[x] C++  ==>  take just only the nodes that have an higher degree
+[x] C++  ==>  if exists a json file of the current graph send to the client that file and then decompose the gml file for ensure the possibility to query the graph
+[x] introduce the clean query button

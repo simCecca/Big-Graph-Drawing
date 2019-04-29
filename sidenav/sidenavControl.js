@@ -27,7 +27,7 @@ class Controller {
 
         this.loader.loadFromServer(requestQuery)
             .then(graph => this.drawGraph(graph))
-            .catch(err => this.showError(err));
+            //.catch(err => this.showError(err));
     }
 
     onTakeNodeFromServer(){
@@ -36,17 +36,18 @@ class Controller {
 
         this.loader.loadNodeFromTheServer(requestQuery)
             .then(node => this.renderer.querySingleNode(node))
-            .catch(err => this.showError(err));
+            //.catch(err => this.showError(err));
 
     }
 
     onTakeShorthestPath(){
-        const nodeName = document.getElementById("nodeName").value;
-        const requestQuery = "http://localhost:1234/bcgraph/node?id=" + nodeName;
+        const startNode = document.getElementById("startNode").value;
+        const targetNode = document.getElementById("targetNode").value;
+        const requestQuery = "http://localhost:1234/bcgraph/spath?start=" + startNode + "&target=" + targetNode;
 
-        this.loader.loadNodeFromTheServer(requestQuery)
-            .then(node => this.renderer.querySingleNode(node))
-            .catch(err => this.showError(err));
+        this.loader.loadShortestPathFromServer(requestQuery)
+            .then(nodes => this.renderer.drawShorthestPath(nodes))
+            //.catch(err => this.showError(err));
 
     }
 
@@ -77,6 +78,10 @@ class Controller {
 
     stopZoom(){
         this.renderer.stopZoom();
+    }
+
+    resetQuery(){
+        this.renderer.resetQuery();
     }
 
     showError(msg) {

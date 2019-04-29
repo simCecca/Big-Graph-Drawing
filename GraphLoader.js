@@ -19,6 +19,12 @@ class GraphLoader{
         return node;
     }
 
+    //shortest path from server
+    async loadShortestPathFromServer(graphPath){
+        const nodes = await this.server.loadFromServer(graphPath);
+        return nodes;
+    }
+
     //load from file
     async loadFromFile(file) {
         let json = await this._load(file);

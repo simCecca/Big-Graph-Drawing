@@ -90,7 +90,11 @@
             <text id = "dialogText" x="0" y ="55%" font-size="20" font-weight="bold" dominant-baseline="alphabetic" fill= "gray">Waiting for a graph</text>
         </svg>
         <hr class="my-4">
-        <p><h5>Querying the Graph:</h5></p>
+        <p><h5>Querying the Graph:
+        <button type = "button" class="btn btn-warning" onclick="ctrl.resetQuery()" data-toggle="tooltip" data-placement="top">
+            Reset Query Data
+        </button>
+    </h5></p>
         <div class="row querying-panel">
             <div class="col">
                 <div class="input-group mb-3">
@@ -103,7 +107,7 @@
             <div class="col">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onGetFromServer()">Get the Shortest path</button>
+                        <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onTakeShorthestPath()">Get the Shortest path</button>
                     </div>
                     <input type="text" id="startNode" placeholder="Starting node" aria-label="Write the name of the starting node" class="form-control">
                     <input type="text" id="targetNode" placeholder="Target node" aria-label="Write the name of the target node" class="form-control">
