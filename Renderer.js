@@ -356,8 +356,6 @@ class Renderer {
                 nodes_to_renderer.forEach( n => all_edges = all_edges.concat(n.edges));
             }
         });
-        console.log(all_nodes)
-        console.log(all_edges)
         this.renderNodes(this.svgMaxOrder, all_nodes, i, zoom);
         this.renderEdges(this.edgesSvgs[Math.floor(Math.random() * 50) % 3], all_edges);
     }
