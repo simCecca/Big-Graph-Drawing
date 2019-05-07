@@ -7,22 +7,16 @@ class GraphLoader{
     //load the wole graph from the server
     async loadFromServer(graphPath){
         const graph = await this.server.loadFromServer(graphPath);
-        console.log(graph);
+
+        if(graph === "notExist" || graph === "decomposed")
+            return graph;
         return this.loadGraph(graph);
     }
 
     //load a single node from the graph taking information by it's block and it's name in the block
-    async loadNodeFromTheServer(graphPath){
-        console.log(graphPath);
-        const node = await this.server.loadFromServer(graphPath);
-        console.log(node);
-        return node;
-    }
-
     //shortest path from server
-    async loadShortestPathFromServer(graphPath){
-        const nodes = await this.server.loadFromServer(graphPath);
-        return nodes;
+    async loadFromTheServer(graphPath){
+        return await this.server.loadFromServer(graphPath);
     }
 
     //load from file
@@ -148,6 +142,7 @@ class GraphLoader{
                         let idRoot = currentNode.getId().concat("a" + counter + currentNode.name);
                         let currentInnerNode = new Node(idRoot, true, node.size, node.sizeNodes, 0); // in this case size is the degree
                         currentInnerNode.innerNode = true;
+                        currentInnerNode.father = currentNode;
                         newGraph.nodes.push(currentInnerNode);
                     }
                     sommaNodiInterni += numberOfNodes;
@@ -158,7 +153,7 @@ class GraphLoader{
                         let idRoot = currentNode.getId().concat("a" + innerNode.name);
                         let currentInnerNode = new Node(idRoot, true, innerNode.size, node.sizeNodes, 0); // in this case size is the degree
                         currentInnerNode.innerNode = true;
-
+                        currentInnerNode.father = currentNode;
                         newGraph.nodes.push(currentInnerNode);
                         sommaNodiInterni++;
                     });

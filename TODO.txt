@@ -1,3 +1,4 @@
+
 [x] edges inside the blocks must be curved
 [x] each block must have a gray circle below it
     [x] - may the circle should contain also it's cut-vertexes
@@ -19,8 +20,20 @@
 [x] allowing a zoom in relation of the display size that is drawing the graph
 [x] review the drawing algorithm of the blocks when you are drawing a very little subset of the real set of the nodes
 [] better animation for the shortest path
-[] the edges of the shortest path should be curved
 [] C++  ==>  name of the nodes should be the same of the real name of the node
 [x] C++  ==>  take just only the nodes that have an higher degree
 [x] C++  ==>  if exists a json file of the current graph send to the client that file and then decompose the gml file for ensure the possibility to query the graph
 [x] introduce the clean query button
+
+------------------------------------------------------------------------------------------------------------------------
+
+[x] the edges of the shortest path should be curved
+[x] clean the screen each time that you are drawing a new graph
+[x] neighbours of a certain node
+[x] possibility of querying for multiple nodes (hiligthed set)
+[] circle map for connected components
+[x] cutVertex hilighted
+
+------------------------------------------------------------------------------------------------------------------------
+
+[] color

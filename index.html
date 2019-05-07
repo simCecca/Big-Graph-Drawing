@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <!-- For GPU -->
@@ -22,8 +22,6 @@
     <script src="Node.js"></script>
     <script src="Edge.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/controlStyle.css">
-    <link rel="stylesheet" type="text/css" href="css/graphStyle.css">
 
     <style>
         h1 {
@@ -37,8 +35,16 @@
             margin: 0px;
         }
     </style>
+
     <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/graphStyle.css">
+    <link rel="stylesheet" type="text/css" href="css/controlStyle.css">
+
 </head>
 <body>
     <div class = "top-page">
@@ -58,7 +64,7 @@
                 <div class="col">
                     <div class="form-group">
                         <select id="inputState" class="form-control" onchange="ctrl.onAvailableGraphs(this.value)">
-                            <option value="" selected disabled>Choose a predefined graph</option>
+                            <option value="" selected>Choose a predefined graph</option>
                             <option value="./AvailableGraphs/astroph.json">Astro-Physics - collaboration network of Arxiv Astro Physics [nodes: 18,772   edges: 198,110]</option>
                             <option value="./AvailableGraphs/asOregon.json">AS peering information inferred from Oregon route-views [nodes: 11,461   edges: 32,730]</option>
                             <option value="./AvailableGraphs/email.json">Email network [nodes: 1,005   edges: 25,571]</option>
@@ -72,10 +78,9 @@
                     <div class="input-group mb-3">
                         <input type="text" id="graphName" class="form-control" placeholder="Write the graph name" aria-label="Write the graph name" aria-describedby="button-addon2">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onGetFromServer()">Get From Server</button>
+                            <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onGetFromServerIfExistAJSONFileCalculated()">Get From Server</button>
                         </div>
                     </div>
-
                 </div>
                 <div class="col">
 
@@ -101,6 +106,9 @@
                     <input type="text" id="nodeName" class="form-control" placeholder="Write the node name" aria-label="Write the node name" aria-describedby="button-addon2">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onTakeNodeFromServer()">Get the Node</button>
+                    </div>
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary input-group-text" type="button" onclick="ctrl.onTakeNodeNeighboursFromServer()">Get the Neighbours</button>
                     </div>
                 </div>
             </div>
@@ -133,14 +141,6 @@
             </div>
         </div>
     </div>
-
-    <div id="errorDialog" class="errorDialog">
-        <h1>Ops!</h1>
-        <p id="errorMsg">Hi :) (if you are seeing this message something went wrong but we were too lazy to
-            set an error message for it. If I were you I would open the console)</p>
-        <a href="javascript:void(0)" class="closebtn" onclick="ctrl.closeErrorDialog()">&times;</a>
-    </div>
-
 <br><br><br><br>
 <script src="./sidenav/sidenavControl.js"></script>
 <script>
@@ -152,10 +152,16 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+<div id="errorDialog" class="errorDialog" >
+        <h1>Ops!</h1>
+        <p id="errorMsg">Hi :) (if you are seeing this message something went wrong but we were too lazy to
+            set an error message for it. If I were you I would open the console)</p>
+        <a href="javascript:void(0)" class="btn closebtn" onclick="ctrl.closeErrorDialog()">&times;</a>
+</div>
+<div id="successDialog" class="successDialog" >
+    <h1>Good News</h1>
+    <p id="successMsg">From this moment, you can query the graph</p>
+    <a href="javascript:void(0)" class="btn closebtn" onclick="ctrl.closeSuccessDialog()">&times;</a>
+</div>
 </body>
 </html>

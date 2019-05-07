@@ -13,8 +13,8 @@ class Renderer {
         this.edgesFromCutV = this.svgElement.append("g").attr("id", "edgesFromCutV");
         this.svgEdgesMax = this.svgElement.append("g").attr("id", "edgesMax");
 
-        this.svgQueryEdges = this.svgElement.append("g").attr("id", "queryEdges");
         this.svgMaxOrder = this.svgElement.append("g").attr("id", "maxOrder");
+        this.svgQueryEdges = this.svgElement.append("g").attr("id", "queryEdges");
         this.svgQuery = this.svgElement.append("g").attr("id", "query");
         this.edgesSvgs = [this.svgEdgesMin, this.svgEdgesMedium, this.svgEdgesMax];
         this.conesSvgs = [this.svgCones, this.svgConesMin, this.svgConesMedium];
@@ -68,7 +68,7 @@ class Renderer {
         let nameText = "Name: " + node.name;
         let dataText = [ edgesText, (node.innerNode) ? "" : nodesText, nameText ];
         let offset = -fontSize * 1.5;
-        this.svgMaxOrder.append("rect")
+        this.svgQuery.append("rect")
             .attr("width", fontSize * (2 + node.name.length))
             .attr("height", fontSize * 4)
             .attr("x", node.x + node.currentDimension + fontSize * 2)
@@ -77,7 +77,7 @@ class Renderer {
             .attr("stroke-opacity", "0.4")
             .attr("fill-opacity", "0.4")
             .attr("stroke-width", "0.2em");
-        this.svgMaxOrder.selectAll("text")
+        this.svgQuery.selectAll("text")
             .data(dataText)
             .enter()
             .append("text")
@@ -100,8 +100,8 @@ class Renderer {
                 this.drawInfoOfThisNode(node, cc);
                 })
             .on("mouseout", (node, i, nodes) => {
-                this.svgMaxOrder.selectAll("text").remove();
-                this.svgMaxOrder.selectAll("rect").remove();
+                this.svgQuery.selectAll("text").remove();
+                this.svgQuery.selectAll("rect").remove();
             })
             .attr('fill', node => 'rgb(230,230,230)')
             .attr("cx", node => node.x)
@@ -125,7 +125,7 @@ class Renderer {
             .on("mouseover", (node, i, nodes) => {
                 let somma = node.size;
                 if(!node.isABNode) {
-                   d3.select(nodes[i]).transition().duration(100).attr("r", node => node.currentDimension * 2);
+                   //d3.select(nodes[i]).transition().duration(100).attr("r", node => node.currentDimension * 2);
                    if(node.cutVertexNeighboursFirst.length > 0){
                        node.cutVertexNeighboursFirst.forEach((e) => {
                            e.setIntermediateCoordinatesBetweenCutVerteces();
@@ -137,11 +137,11 @@ class Renderer {
             })
             .on("mouseout", (node, i, nodes) => {
                 if(!node.isABNode) {
-                    d3.select(nodes[i]).transition().duration(100).attr("r", node => node.currentDimension);
+                    //d3.select(nodes[i]).transition().duration(100).attr("r", node => node.currentDimension);
                 }
 
-                this.svgMaxOrder.selectAll("text").remove();
-                this.svgMaxOrder.selectAll("rect").remove();
+                this.svgQuery.selectAll("text").remove();
+                this.svgQuery.selectAll("rect").remove();
                 this.edgesFromCutV.selectAll("polygon").remove();
                 this.edgesFromCutV.selectAll("path").remove();
 
@@ -286,6 +286,7 @@ class Renderer {
     }
 
     render() {
+        this.cleanTheVisualization();
         this.graph.getAllComponents().forEach((connectedComponent, i) => {
             if(i === 0) {
                 connectedComponent.sortTheCones();
@@ -309,7 +310,6 @@ class Renderer {
                 console.log("coni");
                 //this.renderCones(connectedComponent.cones, i);
                 this.rendererRectForZooming();
-
             }
         });
     }
@@ -342,23 +342,29 @@ class Renderer {
     }
 
     renderBiconnectedGraph(bc, i, zoom = 1){
-        console.log(bc.nodes.length);
         let l = 0;
-        let all_nodes = [], all_edges = [];
+        let all_nodes_arrays = [], all_edges = [[],[],[]], all_nodes = [];
+        console.log(bc.nodes.length);
         bc.nodes.forEach((children) => {
             if(children.biconnectedGraph !== null) {
-                let nodes_to_renderer =  children.biconnectedGraph.nodes.slice(0, (children.root) ? ((children.deep > 11) ? 2000 : 3000) : 500);
-                //this.renderNodes(this.svgMaxOrder, nodes_to_renderer, i, zoom);
-                if(children.root) console.log(children);
-                //nodes_to_renderer.forEach( n => {this.renderEdges(this.edgesSvgs[Math.floor(Math.random() * 50) % 3], n.edges)});
-
-                all_nodes = all_nodes.concat(nodes_to_renderer);
-                nodes_to_renderer.forEach( n => all_edges = all_edges.concat(n.edges));
+                all_nodes_arrays.push(children.biconnectedGraph.nodes.slice(0, (children.root) ? ((children.deep > 11) ? 2000 : 3000) : 500));
             }
+            if(l % 50000 === 0) console.log(l);
+            l++;
+        });
+        all_nodes_arrays.forEach(arr => {
+            arr.forEach(n => {all_nodes.push(n);
+            const cSet = Math.floor(Math.random() * 50) % 3;
+            all_edges[cSet] = all_edges[cSet].concat(n.edges);
+            })
         });
         this.renderNodes(this.svgMaxOrder, all_nodes, i, zoom);
-        this.renderEdges(this.edgesSvgs[Math.floor(Math.random() * 50) % 3], all_edges);
+        console.log(all_edges);
+        all_edges.forEach((cEdges, i) => {
+            this.renderEdges(this.edgesSvgs[i], cEdges);
+        })
     }
+
     removeEdges(edges){
         edges.forEach((edge) => {
             this.svgEdges.select("#" + edge.id).remove();
@@ -380,10 +386,10 @@ class Renderer {
 
     //querying the graph
     //single node format { block: name, node: name, nodeoriginal: name, cutvertex: name }
-    querySingleNode(node){
+    querySingleNode(node, color = "rgb(0,75,0)"){
         //search the block
         const nodeToDraw = this.findTheNodeInTheGraph(node);
-        this.svgQuery.select("#" + nodeToDraw.getId()).attr("fill", "green").attr("r",50).transition().duration(3000).attr("r", 5);
+        this.svgQuery.select("#" + nodeToDraw.getId()).attr("fill", color).attr("r",0).transition().duration(500).attr("r", 5);
     }
 
     findTheNodeInTheGraph(node){
@@ -393,17 +399,17 @@ class Renderer {
             nodeName = 'a0cutv' + node.block;
         }
         let find = false;
-        let nodeToDraw;
+        let nodeToDraw = null;
         this.graph.getAllComponents()[0].getNodes().forEach(cNode => {
             if(node.cutvertex){
                 if(cNode.getId() === nodeName) {
                     nodeToDraw = cNode;
+                    this.renderNodes(this.svgQuery, [nodeToDraw], 0);
                 }
             }else {
                 if (cNode.getId() === blockId) {
                     cNode.biconnectedGraph.getNodes().forEach(ccNode => {
                         if (ccNode.getId() === nodeName) {
-                            console.log(ccNode + " " + nodeName);
                             find = true;
                             nodeToDraw = ccNode;
                         }
@@ -413,6 +419,7 @@ class Renderer {
                         nodeToDraw.x = cNode.x + Math.random() * cNode.dimension * 0.5 * Math.cos(Math.random() * 6.28);
                         nodeToDraw.y = cNode.y + Math.random() * cNode.dimension * 0.5 * Math.cos(Math.random() * 6.28);
                         nodeToDraw.innerNode = nodeToDraw.isABNode = true;
+                        nodeToDraw.father = cNode;
                         cNode.biconnectedGraph.getNodes().push(nodeToDraw);
                     }
                     this.renderNodes(this.svgQuery, [nodeToDraw], 0);
@@ -422,44 +429,48 @@ class Renderer {
         return nodeToDraw;
     }
 
-    drawShorthestPath(nodes){
+    _drawTheNodesAfterTheQuery(nodes, rules){
         let nodesToDraw = [];
-        let edgesToDraw = [];
         let father;
-        nodes.shortestpath.forEach(node =>{
+        let edgesToDraw = [];
+        nodes.forEach((node, i) =>{
             const currentNode = this.findTheNodeInTheGraph(node);
             nodesToDraw.push(currentNode);
             if(father !== undefined){
-                const cEdge = new Edge(father, currentNode, "green");
+                const cEdge = new Edge(father, currentNode, "black", currentNode.father);
+                cEdge.setIntermediateCoordinatesBetweenCutVerteces();
                 edgesToDraw.push(cEdge);
             }
             father = currentNode;
-            this.querySingleNode(node);
+            this.querySingleNode(node,(rules(i)) ? "rgb(0,75,0)" : "green");
         });
+        return edgesToDraw;
+    }
+    drawShorthestPath(nodes){
+        let edgesToDraw = this._drawTheNodesAfterTheQuery(nodes.shortestpath, (i) => (i === 0 || i === nodes.shortestpath.length - 1));
+        this.renderEdges(this.svgQueryEdges, edgesToDraw, 0.1);
+    }
 
-        const svgEdges = this.svgQueryEdges.selectAll("line")
-            .data(edgesToDraw, edge => edge.id); // edges aren't going to change...
-
-        svgEdges.enter()
-            .append("line")
-            .merge(svgEdges)
-            .attr("x1", edge => edge.x1)
-            .attr("y1", edge => edge.y1)
-            .attr("x2", edge => edge.x1)
-            .attr("y2", edge => edge.y1)
-            .transition().duration(10000)
-            .attr("x2", edge => edge.x2)
-            .attr("y2", edge => edge.y2)
-            .attr("fill", "green")
-            .attr("id", edge => {console.log(edge); return edge.id})
-            .attr("stroke", "green")
-            .attr("stroke-width", 2);
-
+    drawNeighbours(nodes){
+        this._drawTheNodesAfterTheQuery(nodes.neighbours, (i) => i === nodes.neighbours.length - 1);
     }
 
     resetQuery(){
-        this.svgQueryEdges.selectAll("line").remove();
+        this.svgQueryEdges.selectAll("path").remove();
         this.svgQuery.selectAll("circle").remove();
     }
 
+    cleanTheVisualization() {
+        this.svgNodes.selectAll("*").remove();
+        this.svgCones.selectAll("*").remove();
+        this.svgEdgesMin.selectAll("*").remove();
+        this.svgConesMin.selectAll("*").remove();
+        this.svgEdgesMedium.selectAll("*").remove();
+        this.svgConesMedium.selectAll("*").remove();
+        this.edgesFromCutV.selectAll("*").remove();
+        this.svgEdgesMax.selectAll("*").remove();
+        this.svgQueryEdges.selectAll("*").remove();
+        this.svgMaxOrder.selectAll("*").remove();
+        this.svgQuery.selectAll("*").remove();
+    }
 }
