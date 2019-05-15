@@ -5,6 +5,7 @@ class Node{
         this.y = 0;
 
         this.name = id;
+        this.nameOriginalGraph = -1;
         //this.name = this.name.concat(size);
         this.father = null;
         this.children = [];
@@ -27,7 +28,7 @@ class Node{
         this.subtreeNodes = 0;
         this.weightForChildren = 0;
         this.minWidth = 0;
-        this.dimension = 5;
+        this.dimension = 0;
         this.currentDimension = 0;
         //condition
         this.isBlack = false;
@@ -62,6 +63,14 @@ class Node{
 
     getVisitedValue(){
         return this.visitedValue;
+    }
+
+    getX(){
+        return this.x;
+    }
+
+    getY(){
+        return this.y;
     }
 
     getImportance(){

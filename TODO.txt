@@ -36,4 +36,15 @@
 
 ------------------------------------------------------------------------------------------------------------------------
 
-[] color
+[x] color edges in a shortestpath with the same color scale
+    maybe is better a double ended color map
+[] new drawing algorithm for the node in the different connected components
+    [] maybe I have to modify the jSON in the c++ because I have to intert all the informations in merit of the edges of the blocks
+[x] understanding when nodes are not overlapping
+
+------------------------------------------------------------------------------------------------------------------------
+
+[X] resizing una componente biconnessa con n nodi ed una componenete bi connessa con due nodi hanno la stessa dimensione
+[] se una componente ha pochi nodi, va disegnata per intero, cutvertex sul cerchio e random al centro
+[] chiesto uno shpath se appartiene a due cc differenti segnala in rosso i due nodi in due cc differenti
+[x] cerchi sfondo bianco e bordo blue

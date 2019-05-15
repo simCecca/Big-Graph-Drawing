@@ -3,12 +3,15 @@ class DrawAlgorithm{
     constructor(weight, height){
         this.weight = weight;
         this.height = height;
+        this.connectedComponentsSet = [];
+        this.totalNumberOfNodes = 0;
     }
 
 
     //------------------------------------------------------------------------------------------------------------------
 
     _calculateSetsOfChildren(root){
+        if(root.getNeighbours().length === 0) return [new Map(), 0, 0];
         let set = new Map(), currArray = [], max = 0, min = 500;
         root.getNeighbours().forEach((child) => {
             currArray = set.get(child.deep);
@@ -107,12 +110,11 @@ class DrawAlgorithm{
         const sumOfTheLogaritmicNumberOfNodeForEachSet = this._sumOfLogaritmicValues(set[0]);//per dividere i radianti in maniera logaritmica
 
         let pieceOfSun = [0, 0];
-
         let iteratore = set[1] - 1; // set[1] is the smallest deep in the tree from the root to the leafs
         let firstVal = set[1];
         let radius = this._assignTheRightSpaceForEachLevel(set[0], radiusMax, radiusMin);
         root.dimension = radius[1][1];
-        while(iteratore !== undefined && iteratore <= set[2]){
+        while(root.getNeighbours().length > 0 && iteratore !== undefined && iteratore <= set[2]){
             let currentSetOfChildren = set[0].get(iteratore);
             //assign the coordinates to this set of children
             //potrebbe essere che la lunghezza passa da 2 a 4 quindi una fila può mancare, se non manca lavoro
@@ -211,51 +213,56 @@ class DrawAlgorithm{
         }
     }
 
-    //main method for all kind of drawing
-   async drawBCTree(graph){
-        dialogueBox("Coordinate Assignment");
-        await sleep(50);
-        console.log(graph);
-        let currentWeight = this.weight, currentHeight = this.height;
-        let totalNumberOfNodes = 0, minWeight = 20, minHeight = 0;
-        let newCC = [];
-        graph.getAllComponents().forEach((connectedComponent) => {
-            if(connectedComponent != undefined && connectedComponent.getNodes()[0] != undefined) {
-                //delete the cutVertex
-                //connectedComponent.deleteTheCutVertex();
-                connectedComponent.deleteTheElementaryBlocks(5);
-
-                newCC.push(connectedComponent);
-                const root = connectedComponent.getNodes()[0];
-                const deep = this._deepGraph(root, 0);
-                totalNumberOfNodes += deep[1];
-                connectedComponent.setMaxSize(deep[2]);
-            }
-        });
-        newCC.sort((a,b) => {
-            return b.getNodes()[0].subtreeNodes - a.getNodes()[0].subtreeNodes;
-        });
-        newCC.forEach((connectedComponent) => {
-          //  if(connectedComponent.getNodes()[0] !== undefined) {
-                let root = connectedComponent.getNodes()[0];
-                let percentage = root.subtreeNodes / totalNumberOfNodes;
-                if (percentage >= 0.3) {
-                    root.root = true;
-                    root.dimension = 100;
-                   //this.assignTheCoordinateToTheBlocksButCircularly(root, currentWeight, currentHeight);
-                   this._sunburstSelfAdaptingSnail(root, currentWeight, currentHeight);//coordinate assignment to the bc-trees nodes
-                   //connectedComponent._calculateFathersAndFans();
-                   minHeight += currentHeight * percentage;
-                   this.setTheCoordinatesToEachNodeInEachBlock(connectedComponent);//coordinate assignment to the nodes inside each block
-                }
-                else {
-                  minWeight += currentWeight * percentage;
-                }
+    async reassignTheCoordinatesToTheRightPlace(){
+        this.connectedComponentsSet.forEach((connectedComponent) => {
+            connectedComponent.getNodes().forEach(n => {
+                n.setX(n.getX() + connectedComponent.x - connectedComponent.radiusDrawing);
+                n.setY(n.getY() + connectedComponent.y - connectedComponent.radiusDrawing);
+            });
+            //connectedComponent._calculateFathersAndFans();
+            this.setTheCoordinatesToEachNodeInEachBlock(connectedComponent);//coordinate assignment to the nodes inside each block
         });
         dialogueBox("The coordinates have been assigned to all the nodes, now it's the renderer's job");
         await sleep(50);
         //document.getElementById("dialogText").innerHTML = "The coordinates have been assigned to all the nodes";
         console.log("The coordinates have been assigned to all the nodes");
+    }
+
+    //main method for all kind of drawing
+   async drawBCTree(graph){
+        this.graph = graph;
+        dialogueBox("Coordinate Assignment");
+        await sleep(50);
+        console.log(graph);
+        let woleMaxSize = 0;
+        graph.getAllComponents().forEach((connectedComponent) => {
+            if (connectedComponent !== undefined && connectedComponent.getNodes()[0] !== undefined) {
+                //delete the cutVertex
+                //connectedComponent.deleteTheCutVertex();
+                connectedComponent.deleteTheElementaryBlocks(5);
+
+                this.connectedComponentsSet.push(connectedComponent);
+                const root = connectedComponent.getNodes()[0];
+                const deep = this._deepGraph(root, 0);
+                this.totalNumberOfNodes += deep[1];
+                connectedComponent.setMaxSize(deep[2]);
+                if(woleMaxSize < deep[2]) woleMaxSize = deep[2];
+            }
+        });
+        this.connectedComponentsSet.sort((a, b) => {
+            return b.getNodes()[0].subtreeNodes - a.getNodes()[0].subtreeNodes;
+        });
+        this.connectedComponentsSet.forEach((connectedComponent) => {
+            let root = connectedComponent.getNodes()[0];
+            root.root = true;
+            connectedComponent.radiusDrawing = (woleMaxSize === connectedComponent.getMaxSize()) ? (Math.min(this.weight, this.height) / 2) : ((Math.log10(connectedComponent.size) / Math.log10(woleMaxSize)) * 20);
+            this._sunburstSelfAdaptingSnail(root, connectedComponent.radiusDrawing * 2, connectedComponent.radiusDrawing * 2);//coordinate assignment to the bc-trees nodes
+            connectedComponent.getNodes().forEach(node => {
+                if (!node.root) node.dimension = (Math.log10(node.getSize()) / Math.log10(woleMaxSize)) * 20;//set the dimension of each node, for calculating this parameter it is needed the sixe of the max element in the graph
+                //node.dimension = 1;
+                if (!node.dimension > 0) node.dimension = 1;
+            });
+        });
     }
 
     /*drawing the edges from a cut-vertex to their connected blocks*/
@@ -278,7 +285,9 @@ class DrawAlgorithm{
 
     setTheCoordinatesToEachNodeInEachBlock(cc){
         cc.nodes.forEach((node) => {
-            if(!node.root) node.dimension = (Math.log10(node.getSize()) / Math.log10(cc.getMaxSize())) * 20;//set the dimension of each node, for calculating this parameter it is needed the sixe of the max element in the graph
+            // if(!node.root) node.dimension = (Math.log10(node.getSize()) / Math.log10(cc.getMaxSize())) * 20;//set the dimension of each node, for calculating this parameter it is needed the sixe of the max element in the graph
+            // //node.dimension = 1;
+            // if(!node.dimension > 0) node.dimension = 1;
             if(node.biconnectedGraph !== null){//null and not undefined because in the node's class it is set by default at null
                 let raggio = node.dimension * 0.78; //steps of the raggio
                 let radiant = 0;
@@ -288,7 +297,8 @@ class DrawAlgorithm{
                 let firstR = raggio / 3, secondR = raggio / 3;
                 node.biconnectedGraph.rankingOfTheNodes();
                 let numberOfNodes = node.biconnectedGraph.length;
-                numberOfNodes = numberOfNodes < 3000 ? numberOfNodes : 3000;
+                numberOfNodes = numberOfNodes < 3000 ? numberOfNodes : ((cc.root.deep > 11) ? (2000 - 500 * (Math.floor((cc.root.deep / 18) % 2))) : 3000);
+                //numberOfNodes = numberOfNodes < 3000 ? numberOfNodes : (this.graph.getConnectedComponent(0).root.deep > 11) ? (2000 - 1000 * ((this.graph.getConnectedComponent(0).root.deep / 18) % 2)) : 3000;
                 node.biconnectedGraph.nodes.forEach((children, index) => {
                     children.dimension = 1;
                     if(index === numberOfNodes / 2){
@@ -311,6 +321,7 @@ class DrawAlgorithm{
                     if(node.sizeNodes > cc.root.sizeNodes * 0.5) this.assignTheCoordinatesToTheEdgesOfTheCurrentBlok(node, children);
                 });
             }
+
         })
     }
     /*Input: a node that represent a biconnected block, the block have a list of nodes that are the node inside him.
@@ -374,21 +385,28 @@ class DrawAlgorithm{
     //assign the space for each level
     _assignTheRightSpaceForEachLevel(levels, radiusX, radiusY){
         let raysX = [], raysY = [], max = 0, orderedLevels = [];
-        levels.forEach((value, key) => {
-            max += Math.log10(value.length);
-            orderedLevels[key] = value.length;
-        });
-        orderedLevels.forEach((value, key) => {
-            let percent = (Math.log10(value) / max);
-            let currentValueX = percent * radiusX;
-            let currentValueY = percent * radiusY;
-            raysX[key] = (key > 3 && key % 2 === 0) ? raysX[key - 2] + currentValueX : currentValueX;
-            if(currentValueX < 20) raysX[key] += 20;
-            raysY[key] = (key > 3 && key % 2 === 0) ? raysY[key - 2] + currentValueY : currentValueY;
-            if(currentValueY < 20) raysY[key] += 20;
-            raysX[key - 1] = (key % 2 === 0 && key > 2) ? raysX[key - 2] + ((raysX[key] - raysX[key - 2]) / 2) : raysX[key] * 2 / 3;
-            raysY[key - 1] = (key % 2 === 0 && key > 2) ? raysY[key - 2] + ((raysY[key] - raysY[key - 2]) / 2) : raysY[key] * 2 / 3;
-        });
+        console.log(levels);
+        if(!levels.length){
+            raysX[1] = radiusX * 0.95;
+            raysY[1] = radiusY * 0.95;
+        }
+        else {
+            levels.forEach((value, key) => {
+                max += Math.log10(value.length);
+                orderedLevels[key] = value.length;
+            });
+            orderedLevels.forEach((value, key) => {
+                let percent = (Math.log10(value) / max);
+                let currentValueX = percent * radiusX;
+                let currentValueY = percent * radiusY;
+                raysX[key] = (key > 3 && key % 2 === 0) ? raysX[key - 2] + currentValueX : currentValueX;
+                raysY[key] = (key > 3 && key % 2 === 0) ? raysY[key - 2] + currentValueY : currentValueY;
+                // if (currentValueX < 20) raysX[key] += 20;
+                // if (currentValueY < 20) raysY[key] += 20;
+                raysX[key - 1] = (key % 2 === 0 && key > 2) ? raysX[key - 2] + ((raysX[key] - raysX[key - 2]) / 2) : raysX[key] * 2 / 3;
+                raysY[key - 1] = (key % 2 === 0 && key > 2) ? raysY[key - 2] + ((raysY[key] - raysY[key - 2]) / 2) : raysY[key] * 2 / 3;
+            });
+        }
         return [raysX, raysY];
     }
 
@@ -396,8 +414,8 @@ class DrawAlgorithm{
     //assign the space dividing the father space for the number of the childrens
     _coordinateAssignmentCircularly(setOfChildren, startRadiant, sliceStepInRadiant, xRoot, yRoot, radius, level){
         setOfChildren.forEach((node, index) => {
-            node.setX(xRoot + radius[1][level] * Math.cos(startRadiant + (sliceStepInRadiant / 2)));
-            node.setY(yRoot + radius[1][level] * Math.sin(startRadiant + (sliceStepInRadiant / 2)));
+            node.setX(xRoot + ((radius[1][level] !== undefined && radius[1][level] >= 0) ? radius[1][level] : 1) * Math.cos(startRadiant + (sliceStepInRadiant / 2)));
+            node.setY(yRoot + ((radius[1][level] !== undefined && radius[1][level] >= 0) ? radius[1][level] : 1) * Math.sin(startRadiant + (sliceStepInRadiant / 2)));
             this._coordinateAssignmentCircularly(node.children, startRadiant, sliceStepInRadiant/node.getNeighbours().length, xRoot, yRoot, radius, level + 1);
             startRadiant += sliceStepInRadiant;
         });

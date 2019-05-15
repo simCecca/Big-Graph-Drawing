@@ -8,9 +8,9 @@ class Controller {
     /*TODO: togli st'svg da qui e caricalo direttamente nell'html*/
     kindOfProcessor(processor) {
         if (processor === "CPU") {
-            let width = window.screen.availWidth * 0.97;
+            let width = window.screen.availWidth;
             let height = window.screen.availHeight;
-            d3.select('#svgdiv').html('<svg id="svgCanvas" width= "100%" height=' + height*0.8 + 'px shape-rendering="crispEdges" style=" border : 1px solid gray; background-color: white" transform="translate(0,50)"></svg>');
+            d3.select('#svgdiv').html('<svg id="svgCanvas" width= "100%" height=' + height + 'px shape-rendering="crispEdges" style=" border : 1px solid gray; background-color: white" transform="translate(0,50)"></svg>');
             this.renderer = new Renderer();
         }
         else{
@@ -104,7 +104,40 @@ class Controller {
         const nodeName = document.getElementById("nodeName").value;
         let queue = this._parseSetOfNodes(nodeName);
         const requestQuery = "http://localhost:1234/bcgraph/neighbours?id=";
-        this._takeCurrentNode(requestQuery, queue, (n) => this.renderer.drawNeighbours(n));
+        this._takeCurrentNode(requestQuery, queue, (n) => this.renderer.drawNeighbours(n, (i) => (i === 0) ? "rgb(0,75,0)" : "green"));
+    }
+
+    async onTakeNodeNeighboursIntersectionFromServer(){
+        const nodeName = document.getElementById("nodeName").value;
+        let queue = this._parseSetOfNodes(nodeName);
+        const requestQuery = "http://localhost:1234/bcgraph/neighbours?id=";
+        let nodes = [];
+        const queueLength = queue.length;
+        while(queue.length > 0){
+            const currentNodes = await this.loader.loadFromTheServer(requestQuery + queue.pop());
+            nodes.push(currentNodes);
+        }
+        const nodeName2occurrency = new Map(); //hashmap
+        const nodeName2node = new Map();
+        nodes.forEach(cNodes => {
+            cNodes.neighbours.forEach(node => {
+                let currentValue = nodeName2occurrency.get(node.node);
+                if(currentValue !== undefined) {
+                    nodeName2occurrency.set(node.node,currentValue + 1)
+                }else {
+                    nodeName2occurrency.set(node.node, 1);
+                    nodeName2node.set(node.node, node);
+                }
+            });
+        });
+        const nodesToDraw = [];
+        for (let [key, value] of nodeName2occurrency.entries()) {
+            if(value === queueLength){
+                nodesToDraw.push(nodeName2node.get(key));
+            }
+        }
+        console.log(nodesToDraw);
+        this.renderer.drawNeighbours({ "neighbours" : nodesToDraw}, (i) => "green");
     }
 
     onTakeShorthestPath(){

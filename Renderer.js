@@ -1,9 +1,11 @@
+
 class Renderer {
 
     //todo: creare una classe unica che definisca il flusso di esecuzione
     constructor() {
         this.svg = d3.select("#svgCanvas");
         this.svgElement = this.svg.append("g");
+        this.svgCCNodes = this.svgElement.append("g").attr("id", "ccnodes");
         this.svgNodes = this.svgElement.append("g").attr("id", "nodes");
         this.svgCones = this.svgElement.append("g").attr("id", "cones");
         this.svgEdgesMin = this.svgElement.append("g").attr("id", "edgesMin");
@@ -19,30 +21,86 @@ class Renderer {
         this.edgesSvgs = [this.svgEdgesMin, this.svgEdgesMedium, this.svgEdgesMax];
         this.conesSvgs = [this.svgCones, this.svgConesMin, this.svgConesMedium];
         this.graph = null;
-        this.width = window.screen.availWidth * 0.7;
+        this.width = window.screen.availWidth * 0.835;
         this.height = window.screen.availHeight;
         this.algorithm = new DrawAlgorithm(this.width, this.height); // Dummy graph
         this.isJustCreatedTheRectForTheZoom =false;
         this.zoomStop = 0;
         this.previousScale = {k: 1, x: 0, y: 0};
         this.maxZoomSize = ((window.screen.availWidth + window.screen.availHeight) / 2360) + 1;
-        console.log(this.maxZoomSize)
+    }
+
+    verifyOverlappingOverConnectedComponents(){
+        let result = false;
+        this.graph.graph.forEach((firstNode, firstIndex) => {
+            this.graph.graph.forEach((secondNode, secondIndex) => {
+                if(firstIndex !== secondIndex){
+                    const firstCateto = Math.abs(firstNode.x - secondNode.x), secondCateto = Math.abs(firstNode.y - secondNode.y);
+                    const ipotenusa =  Math.sqrt(firstCateto * firstCateto + secondCateto * secondCateto);
+                    if(ipotenusa < (parseInt(firstNode.radiusDrawing + this.offset(firstNode)) + parseInt(secondNode.radiusDrawing + this.offset(secondNode)))){
+                        result = true;
+                    }
+                }
+            });
+        });
+        return result;
     }
 
     async setGraph(graph) {
-        //dialogueBox("Coordinate Assignment");
-        await this.algorithm.drawBCTree(graph);
         this.graph = graph;
-        //this.render();
+        await this.algorithm.drawBCTree(graph);
+        this.cleanTheVisualization();
+        const simulation = this.drawConnectedComponents();
+        while(this.verifyOverlappingOverConnectedComponents()) { console.log("entro"); await sleep(2000);}
+        simulation.stop();
+        await this.algorithm.reassignTheCoordinatesToTheRightPlace();
+
         const renderFunction = () => {
             this.render();
-            requestAnimationFrame(() => {
-                // this.renderBiconnectedGraph(this.graph.getAllComponents()[0], 0);
-                // console.log("finished the biconnected graph rendering");
-                console.log("visualizzato")});
         };
 
         requestAnimationFrame(renderFunction);
+    }
+    offset(node){
+        const c = node.id === this.graph.getConnectedComponent(0).id ? Math.pow(this.graph.getConnectedComponent(0).root.deep, 1.5) : 3;
+        return c;
+    }
+    drawConnectedComponents(){
+        // Initialize the circle: all located at the center of the svg area
+
+        const node = this.svgCCNodes.append("g")
+            .selectAll("circle")
+            .data(this.graph.getAllComponents(), node => node.getId())
+            .enter()
+            .append("circle")
+            .attr("id", node => node.getId())
+            .attr("r", node => node.radiusDrawing + this.offset(node))
+            .attr('fill', 'transparent')
+            .attr("cx", (node) => { node.x = this.width / 2; return this.width/2 })
+            .attr("cy", (node) => { node.y = this.height / 2; return this.height/2 })
+            .attr("stroke", "blue")
+            .attr("stroke-width", 0.5);
+
+
+// Features of the forces applied to the nodes:
+        const simulation = d3.forceSimulation(this.graph.getAllComponents())
+            .force("forceX", d3.forceX().strength(.1).x(this.width * .5))
+            .force("forceY", d3.forceY().strength(.1).y(this.height * .5))
+            .force("center", d3.forceCenter().x(this.width / 2).y(this.height / 2)) // Attraction to the center of the svg area
+            .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
+            .force("collide", d3.forceCollide().strength(.2).radius(node => node.radiusDrawing + this.offset(node) + 4));// Force that avoids circle overlapping
+
+// Apply these forces to the nodes and update their positions.
+// Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+        simulation
+            .nodes(this.graph.getAllComponents())
+            .on("tick", (d) => {
+                node
+                    .attr("cx", (d) => { if(d.size > this.graph.totalSize * 2 / 3) {d.x = this.width / 2;} return d.x; })
+                    .attr("cy", (d) => { if(d.size > this.graph.totalSize * 2 / 3) {d.y = this.height / 2;} return d.y; })
+
+            });
+        return simulation;
     }
 
     drawConesInTheMiddle(cones){
@@ -62,16 +120,16 @@ class Renderer {
         let dimension = node.currentDimension * 2, minDimension = this.graph.graph[cc].root.currentDimension * 0.33;
         if(dimension < this.graph.graph[cc].root.currentDimension * 0.33)
             dimension = minDimension;
-        let fontSize = ((node.root) ? dimension / 10 : dimension/3);
+        let fontSize = Math.max(((node.root) ? dimension / 10 : dimension/3), 10);
         let nodesText = "Nodes: " + node.sizeNodes;
         let edgesText = "Edges: " + node.size;
         let nameText = "Name: " + node.name;
         let dataText = [ edgesText, (node.innerNode) ? "" : nodesText, nameText ];
         let offset = -fontSize * 1.5;
         this.svgQuery.append("rect")
-            .attr("width", fontSize * (2 + node.name.length))
-            .attr("height", fontSize * 4)
-            .attr("x", node.x + node.currentDimension + fontSize * 2)
+            .attr("width", Math.max(fontSize * (2 + node.name.length), 60))
+            .attr("height", Math.max(fontSize * 4, 30))
+            .attr("x", Math.max(node.x + node.currentDimension + fontSize * 2, 35))
             .attr("y", node.y - fontSize * 2)
             .attr("stroke", "#5b3a29")
             .attr("stroke-opacity", "0.4")
@@ -107,17 +165,12 @@ class Renderer {
             .attr("cx", node => node.x)
             .attr("cy", node => node.y)
             .merge(svgNodes)
-            .attr("r", node => {
-                return node.root ? node.dimension + 1 : node.dimension;
-            })
+            .attr("r", node => {return node.dimension; })
             .attr("stroke-width", 0.1/zoom);
-
     }
     renderNodes(svg, nodes, cc, zoom = 1) {
         const svgNodes = svg.selectAll("circle")
             .data(nodes, node => node.getId());
-
-
 
         svgNodes.enter()
             .append("circle")
@@ -155,7 +208,7 @@ class Renderer {
                 (!node.isABNode || node.innerNode) ?  color = 'rgb(50,50,50)' : (node.isBlack) ? color = 'dark' : color; return color;
             })
             .merge(svgNodes)
-            .attr("cx", node => node.x)
+            .attr("cx", node => {return node.x})
             .attr("cy", node => node.y)
             .attr("r", node => {
             //console.log(zoom);
@@ -164,7 +217,7 @@ class Renderer {
                         if (node.hide) node.currentDimension = 0;
                         if (!node.isABNode || node.isBlack || (node.currentDimension < 2 && !node.hide) ) {
                             node.currentDimension = 1;
-                            node.dimension = 1;
+                            //node.dimension = 1;
                         }
                     }
                     else {
@@ -285,32 +338,30 @@ class Renderer {
         // }
     }
 
-    render() {
-        this.cleanTheVisualization();
+     render() {
         this.graph.getAllComponents().forEach((connectedComponent, i) => {
-            if(i === 0) {
-                connectedComponent.sortTheCones();
-                //this.renderEdges(this.svgEdges, connectedComponent.getEdges());
-                //draw only the cutVertex and the node of the biconnected components
-                let cutVToDraw = [];
-                let blocks = [];
-                connectedComponent.getNodes().forEach(n => {
-                    if(!n.isABNode || n.isBlack)
-                        cutVToDraw.push(n);
-                    if(n.isABNode)
-                        blocks.push(n);
-                });
-                this.renderNodes(this.svgMaxOrder, cutVToDraw, i);
-                console.log("finished the nodes rendering");
-                this.renderBiconnectedBlocks(this.svgNodes, blocks, i);
-                console.log("connected blocks");
-                this.renderBiconnectedGraph(connectedComponent, i);
-                console.log("finished the biconnected graph rendering");
-                this.renderObjectsAlternatingInTheBlock(connectedComponent.cones, i);
-                console.log("coni");
-                //this.renderCones(connectedComponent.cones, i);
-                this.rendererRectForZooming();
-            }
+            connectedComponent.sortTheCones();
+            //this.renderEdges(this.svgEdges, connectedComponent.getEdges());
+            //draw only the cutVertex and the node of the biconnected components
+            let cutVToDraw = [];
+            let blocks = [];
+            connectedComponent.getNodes().forEach(n => {
+                if(!n.isABNode || n.isBlack)
+                    cutVToDraw.push(n);
+                if(n.isABNode)
+                    blocks.push(n);
+            });
+           //cutVToDraw.forEach(n => console.log(n));
+            this.renderNodes(this.svgMaxOrder, cutVToDraw, i);
+            //console.log("finished the nodes rendering");
+            this.renderBiconnectedBlocks(this.svgNodes, blocks, i);
+            //console.log("connected blocks");
+            this.renderBiconnectedGraph(connectedComponent, i);
+            //console.log("finished the biconnected graph rendering");
+            this.renderObjectsAlternatingInTheBlock(connectedComponent.cones, i);
+            //console.log("coni");
+            //this.renderCones(connectedComponent.cones, i);
+            this.rendererRectForZooming();
         });
     }
 
@@ -342,24 +393,24 @@ class Renderer {
     }
 
     renderBiconnectedGraph(bc, i, zoom = 1){
-        let l = 0;
-        let all_nodes_arrays = [], all_edges = [[],[],[]], all_nodes = [];
-        console.log(bc.nodes.length);
+        let all_nodes_arrays = [], all_edges_arrays = [], all_edges = [[],[],[]], all_nodes = [];
         bc.nodes.forEach((children) => {
             if(children.biconnectedGraph !== null) {
-                all_nodes_arrays.push(children.biconnectedGraph.nodes.slice(0, (children.root) ? ((children.deep > 11) ? 2000 : 3000) : 500));
+                all_nodes_arrays.push(children.biconnectedGraph.nodes.slice(0, (children.root) ? ((children.deep > 11) ? (2000 - 500 * (Math.floor((children.deep / 18) % 2))) : 3000) : 100));
             }
-            if(l % 50000 === 0) console.log(l);
-            l++;
         });
         all_nodes_arrays.forEach(arr => {
             arr.forEach(n => {all_nodes.push(n);
-            const cSet = Math.floor(Math.random() * 50) % 3;
-            all_edges[cSet] = all_edges[cSet].concat(n.edges);
+            all_edges_arrays.push(n.edges);
             })
         });
+        all_edges_arrays.forEach(edges => {
+            edges.forEach(edge => {
+                const cSet = Math.floor(Math.random() * 50) % 3;
+                all_edges[cSet].push(edge);
+            });
+        });
         this.renderNodes(this.svgMaxOrder, all_nodes, i, zoom);
-        console.log(all_edges);
         all_edges.forEach((cEdges, i) => {
             this.renderEdges(this.edgesSvgs[i], cEdges);
         })
@@ -429,7 +480,7 @@ class Renderer {
         return nodeToDraw;
     }
 
-    _drawTheNodesAfterTheQuery(nodes, rules){
+    _drawTheNodesAfterTheQuery(nodes, colors){
         let nodesToDraw = [];
         let father;
         let edgesToDraw = [];
@@ -442,17 +493,28 @@ class Renderer {
                 edgesToDraw.push(cEdge);
             }
             father = currentNode;
-            this.querySingleNode(node,(rules(i)) ? "rgb(0,75,0)" : "green");
+            this.querySingleNode(node, colors[i]);//(rules(i)) ? "rgb(0,75,0)" : "green");
         });
         return edgesToDraw;
     }
     drawShorthestPath(nodes){
-        let edgesToDraw = this._drawTheNodesAfterTheQuery(nodes.shortestpath, (i) => (i === 0 || i === nodes.shortestpath.length - 1));
+        const sliceForColor = 255 / (nodes.shortestpath.length - 1);
+        let currentColor = 0;
+        let colors = [];
+        nodes.shortestpath.forEach((n,i) => {
+            colors[i] = "rgb(" + currentColor + ",255," + currentColor + ")";
+            currentColor += sliceForColor;
+        });
+        let edgesToDraw = this._drawTheNodesAfterTheQuery(nodes.shortestpath, colors);
         this.renderEdges(this.svgQueryEdges, edgesToDraw, 0.1);
     }
 
-    drawNeighbours(nodes){
-        this._drawTheNodesAfterTheQuery(nodes.neighbours, (i) => i === nodes.neighbours.length - 1);
+    drawNeighbours(nodes, color){
+        let colors = [];
+        nodes.neighbours.forEach((n, i) => {
+            colors[i] = color(i);
+        });
+        this._drawTheNodesAfterTheQuery(nodes.neighbours, colors);
     }
 
     resetQuery(){
@@ -461,6 +523,7 @@ class Renderer {
     }
 
     cleanTheVisualization() {
+        this.svgCCNodes.selectAll("*").remove();
         this.svgNodes.selectAll("*").remove();
         this.svgCones.selectAll("*").remove();
         this.svgEdgesMin.selectAll("*").remove();

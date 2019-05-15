@@ -12,6 +12,12 @@ class Graph{
         this.maxConeSize = 0; // I know that is always positive
         this.root;
         this.utilities = new GraphUtilities();
+        this.id = 0;
+        this.size = 0;
+
+        this.radius = 0;
+        this.x = 0;
+        this.y = 0;
 
         this.order2nodes = null;
     }
@@ -30,6 +36,18 @@ class Graph{
 
     setMaxSize(max){
         this.maxSize = max;
+    }
+
+    setSize(size){
+        this.size = size;
+    }
+
+    setId(id){
+        this.id = "cc" + id;
+    }
+
+    getId(){
+        return this.id;
     }
 
     getMaxSize(){
@@ -56,7 +74,7 @@ class Graph{
     calculateRoot(){
         let currentNumberOfChildrens = 0;
         this.nodes.forEach(node =>{
-           if (!node.getId().includes("cut") && currentNumberOfChildrens < node.getNeighbours().length){
+           if (!node.getId().includes("cut") && currentNumberOfChildrens <= node.getNeighbours().length){
                this.root = node;
                currentNumberOfChildrens = this.root.getNeighbours().length;
            }

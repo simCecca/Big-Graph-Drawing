@@ -6,6 +6,6 @@ line {
 circle {
     /*fill: orangered;*/
     /*stroke-width: 0.1px;*/
-    stroke: transparent;
+    /*stroke: transparent;*/
     transform-origin: center;
 }

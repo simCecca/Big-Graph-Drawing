@@ -1,0 +1,1 @@
+/*for very big graph the risks is that you haven't much mamory for extract some information in it, so this class permit to scale because deallocate immidiately the memory */

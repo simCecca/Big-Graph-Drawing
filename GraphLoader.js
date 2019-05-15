@@ -70,6 +70,7 @@ class GraphLoader{
         let sommaNodiInterni = 0;
         //the first thing to do is to create the connected components graph in witch we insert each connected components (subgraph)
         let connectedComponentsGraph = new ConnectedComponentsGraph();
+        connectedComponentsGraph.setTotalSize(jsonGraph.size);
 
         //for each connected components i create a graph and insert it into the total graph
         jsonGraph.children.forEach((connected, i) => {
@@ -81,6 +82,7 @@ class GraphLoader{
             let currentCC = "a".concat(i);
             //the importance of a connected components depends on their number of edges
             graph.setImportace(connected.size / jsonGraph.size);
+            graph.setSize(connected.size);
 
             //creo una mappa che ha come id un cutVertex e come valore la lista dei cutVertex che gli sono vicini nel grafo originale
             let cutVertexId2cutVertexSonId = new Map();
@@ -152,6 +154,7 @@ class GraphLoader{
                     node.innerGraph.forEach((innerNode) => {
                         let idRoot = currentNode.getId().concat("a" + innerNode.name);
                         let currentInnerNode = new Node(idRoot, true, innerNode.size, node.sizeNodes, 0); // in this case size is the degree
+                        currentInnerNode.nameOriginalGraph = innerNode.nameOriginal;
                         currentInnerNode.innerNode = true;
                         currentInnerNode.father = currentNode;
                         newGraph.nodes.push(currentInnerNode);
@@ -185,10 +188,7 @@ class GraphLoader{
                     }
                 })
             });
-
-            if(graph != undefined) {
-                graph.calculateRoot();
-            }
+            graph.calculateRoot();
             cutVertexId2cutVertexSonId.forEach((value, key, map) => {
                 let currentCutV = id2connectedComponents.get(currentCC.concat("cutv" + key));
                 value.forEach(([son, block]) => {
@@ -201,7 +201,7 @@ class GraphLoader{
                         c.edges.push(e1);
                 });
             });
-
+            graph.setId(i);
             connectedComponentsGraph.addConnecredComponent(graph);
         });
 

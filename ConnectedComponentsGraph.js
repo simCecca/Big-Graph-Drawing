@@ -2,10 +2,13 @@ class ConnectedComponentsGraph{
 
     constructor(){
         this.graph = [];
+        this.totalSize = 0;
+        this.totalLogaritmicSize = 0;
     }
 
     addConnecredComponent(graph){
-        this.graph.push(graph);
+        if(graph.nodes.length > 0)
+            this.graph.push(graph);
     }
 
     getConnectedComponent(i){
@@ -14,6 +17,15 @@ class ConnectedComponentsGraph{
 
     getAllComponents(){
         return this.graph;
+    }
+
+    getTotalLogaritmicSize(){
+        if(this.totalLogaritmicSize === 0) this.graph.forEach(n => this.totalLogaritmicSize += Math.log10(n.size));
+        return this.totalLogaritmicSize;
+    }
+
+    setTotalSize(tsize){
+        this.totalSize = tsize;
     }
 
     calculateRootForAllCC(){
