@@ -165,7 +165,7 @@ class Renderer {
             .attr("cx", node => node.x)
             .attr("cy", node => node.y)
             .merge(svgNodes)
-            .attr("r", node => {return node.dimension; })
+            .attr("r", node => (node.biconnectedGraph.nodes.length === 0) ? 0 : node.dimension)
             .attr("stroke-width", 0.1/zoom);
     }
     renderNodes(svg, nodes, cc, zoom = 1) {
@@ -437,21 +437,22 @@ class Renderer {
 
     //querying the graph
     //single node format { block: name, node: name, nodeoriginal: name, cutvertex: name }
-    querySingleNode(node, color = "rgb(0,75,0)"){
+    querySingleNode(node, color = "rgb(0,0,100)"){
         //search the block
         const nodeToDraw = this.findTheNodeInTheGraph(node);
-        this.svgQuery.select("#" + nodeToDraw.getId()).attr("fill", color).attr("r",0).transition().duration(500).attr("r", 5);
+        this.svgQuery.select("#" + nodeToDraw.getId()).attr("fill", color).attr("r",0).transition().duration(500).attr("r", 5).attr("stroke", "black").attr("stroke-width", 0.5);
     }
 
     findTheNodeInTheGraph(node){
-        let blockId = 'a0bc' + node.block;
+        const connectedComponent = node.cc;
+        let blockId = 'a' + connectedComponent + 'bc' + node.block;
         let nodeName = blockId + 'a' + node.node;
         if(node.cutvertex){
-            nodeName = 'a0cutv' + node.block;
+            nodeName = 'a' + connectedComponent + 'cutv' + node.block;
         }
         let find = false;
         let nodeToDraw = null;
-        this.graph.getAllComponents()[0].getNodes().forEach(cNode => {
+        this.graph.getAllComponents()[connectedComponent].getNodes().forEach(cNode => {
             if(node.cutvertex){
                 if(cNode.getId() === nodeName) {
                     nodeToDraw = cNode;
@@ -498,15 +499,18 @@ class Renderer {
         return edgesToDraw;
     }
     drawShorthestPath(nodes){
-        const sliceForColor = 255 / (nodes.shortestpath.length - 1);
-        let currentColor = 0;
-        let colors = [];
-        nodes.shortestpath.forEach((n,i) => {
-            colors[i] = "rgb(" + currentColor + ",255," + currentColor + ")";
-            currentColor += sliceForColor;
-        });
-        let edgesToDraw = this._drawTheNodesAfterTheQuery(nodes.shortestpath, colors);
-        this.renderEdges(this.svgQueryEdges, edgesToDraw, 0.1);
+        if(nodes.neighbours === undefined) {
+            const sliceForColor = 255 / (nodes.shortestpath.length - 1);
+            let currentColor = 0;
+            let colors = [];
+            nodes.shortestpath.forEach((n, i) => {
+                colors[i] = "rgb(" + currentColor + "," + currentColor + " ,255)";
+                currentColor += sliceForColor;
+            });
+            let edgesToDraw = this._drawTheNodesAfterTheQuery(nodes.shortestpath, colors);
+            this.renderEdges(this.svgQueryEdges, edgesToDraw, 0.1);
+        }
+        else this.drawNeighbours(nodes, (i) => "red");
     }
 
     drawNeighbours(nodes, color){

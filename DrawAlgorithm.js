@@ -385,8 +385,8 @@ class DrawAlgorithm{
     //assign the space for each level
     _assignTheRightSpaceForEachLevel(levels, radiusX, radiusY){
         let raysX = [], raysY = [], max = 0, orderedLevels = [];
-        console.log(levels);
-        if(!levels.length){
+
+        if(levels.size === 0){
             raysX[1] = radiusX * 0.95;
             raysY[1] = radiusY * 0.95;
         }
@@ -401,8 +401,6 @@ class DrawAlgorithm{
                 let currentValueY = percent * radiusY;
                 raysX[key] = (key > 3 && key % 2 === 0) ? raysX[key - 2] + currentValueX : currentValueX;
                 raysY[key] = (key > 3 && key % 2 === 0) ? raysY[key - 2] + currentValueY : currentValueY;
-                // if (currentValueX < 20) raysX[key] += 20;
-                // if (currentValueY < 20) raysY[key] += 20;
                 raysX[key - 1] = (key % 2 === 0 && key > 2) ? raysX[key - 2] + ((raysX[key] - raysX[key - 2]) / 2) : raysX[key] * 2 / 3;
                 raysY[key - 1] = (key % 2 === 0 && key > 2) ? raysY[key - 2] + ((raysY[key] - raysY[key - 2]) / 2) : raysY[key] * 2 / 3;
             });

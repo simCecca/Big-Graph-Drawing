@@ -104,7 +104,7 @@ class Controller {
         const nodeName = document.getElementById("nodeName").value;
         let queue = this._parseSetOfNodes(nodeName);
         const requestQuery = "http://localhost:1234/bcgraph/neighbours?id=";
-        this._takeCurrentNode(requestQuery, queue, (n) => this.renderer.drawNeighbours(n, (i) => (i === 0) ? "rgb(0,75,0)" : "green"));
+        this._takeCurrentNode(requestQuery, queue, (n) => this.renderer.drawNeighbours(n, (i) => (i === 0) ? "rgb(0,0,100)" : "rgb(0,0,200)"));
     }
 
     async onTakeNodeNeighboursIntersectionFromServer(){
@@ -137,7 +137,7 @@ class Controller {
             }
         }
         console.log(nodesToDraw);
-        this.renderer.drawNeighbours({ "neighbours" : nodesToDraw}, (i) => "green");
+        this.renderer.drawNeighbours({ "neighbours" : nodesToDraw}, (i) => (i === 0) ? "rgb(0,0,100)" : "rgb(0,0,200)");
     }
 
     onTakeShorthestPath(){

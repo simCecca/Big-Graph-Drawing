@@ -138,19 +138,7 @@ class GraphLoader{
                 //--------------------------------end of the SPQRTree creating------------------------------------------
                 //--------------------------------creating the biconnected graph inside this block----------------------
                 let newGraph = new Graph();
-                if(node.innerGraph === undefined && node.size > 1) {//if it is equal to undefined I generate the nodes automatically
-                    const numberOfNodes = (node.sizeNodes <= 2) ? node.sizeNodes : 5 + Math.log10(node.sizeNodes);
-                    for (let counter = 0; counter < numberOfNodes; counter++) {
-                        let idRoot = currentNode.getId().concat("a" + counter + currentNode.name);
-                        let currentInnerNode = new Node(idRoot, true, node.size, node.sizeNodes, 0); // in this case size is the degree
-                        currentInnerNode.innerNode = true;
-                        currentInnerNode.father = currentNode;
-                        newGraph.nodes.push(currentInnerNode);
-                    }
-                    sommaNodiInterni += numberOfNodes;
-                    currentNode.biconnectedGraph = newGraph;
-                }else if(node.innerGraph !== undefined){
-
+                if(node.innerGraph !== undefined){
                     node.innerGraph.forEach((innerNode) => {
                         let idRoot = currentNode.getId().concat("a" + innerNode.name);
                         let currentInnerNode = new Node(idRoot, true, innerNode.size, node.sizeNodes, 0); // in this case size is the degree
