@@ -40,7 +40,7 @@
 using namespace rapidjson;
 
 //stack & heap memory
-#pragma comment(linker, "/STACK:600000000")
+#pragma comment(linker, "/STACK:300000000")
 //#pragma comment(linker, "/HEAP:800000000")
 
 #include <algorithm>

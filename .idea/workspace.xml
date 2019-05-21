@@ -3,11 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="8165e41a-b634-45ae-bad8-5a1bc200cd9c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DrawAlgorithm.js" beforeDir="false" afterPath="$PROJECT_DIR$/DrawAlgorithm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GraphLoader.js" beforeDir="false" afterPath="$PROJECT_DIR$/GraphLoader.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/Renderer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TODO.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sidenav/sidenavControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/sidenav/sidenavControl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AvailableGraphs/amazon.json" beforeDir="false" afterPath="$PROJECT_DIR$/AvailableGraphs/amazon.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AvailableGraphs/amazon302.json" beforeDir="false" afterPath="$PROJECT_DIR$/AvailableGraphs/amazon302.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AvailableGraphs/astroph.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BC_SPQR_analysis/BCTreeJSON.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BC_SPQR_analysis/BCTreeJSON.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BC_SPQR_analysis/GraphComposition.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BC_SPQR_analysis/GraphComposition.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BC_SPQR_analysis/Main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BC_SPQR_analysis/Main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BC_SPQR_analysis/TaskManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BC_SPQR_analysis/TaskManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BC_SPQR_analysis/TaskManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/BC_SPQR_analysis/TaskManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -69,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sidenavControl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sidenavControl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sidenav/sidenavControl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="82" column="28" lean-forward="true" selection-start-line="82" selection-start-column="28" selection-end-line="82" selection-end-column="28" />
+            <state relative-caret-position="59">
+              <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
               <folding>
                 <element signature="n#style#0;n#svg#0;n#!!top" expanded="true" />
               </folding>
@@ -108,11 +112,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="115" column="22" selection-start-line="115" selection-start-column="22" selection-end-line="115" selection-end-column="22" />
+            <state relative-caret-position="318">
+              <caret line="69" column="141" selection-start-line="69" selection-start-column="141" selection-end-line="69" selection-end-column="141" />
             </state>
           </provider>
         </entry>
@@ -128,7 +132,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>biconnected</find>
       <find>console</find>
       <find>choose a</find>
       <find>max</find>
@@ -158,6 +161,7 @@
       <find>drawNeighbours</find>
       <find>drawNeigh</find>
       <find>zoom</find>
+      <find>neigh</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -173,7 +177,6 @@
         <option value="$PROJECT_DIR$/css/controlStyle.css" />
         <option value="$PROJECT_DIR$/Graph.js" />
         <option value="$PROJECT_DIR$/ConnectedComponentsGraph.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/Node.js" />
         <option value="$PROJECT_DIR$/css/graphStyle.css" />
         <option value="$PROJECT_DIR$/DrawAlgorithm.js" />
@@ -181,6 +184,7 @@
         <option value="$PROJECT_DIR$/TODO.txt" />
         <option value="$PROJECT_DIR$/Renderer.js" />
         <option value="$PROJECT_DIR$/sidenav/sidenavControl.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -316,12 +320,12 @@
       <workItem from="1558093658671" duration="637000" />
       <workItem from="1558171145074" duration="1547000" />
       <workItem from="1558297330193" duration="12214000" />
-      <workItem from="1558426083583" duration="2447000" />
+      <workItem from="1558426083583" duration="4144000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="457287000" />
+    <option name="totallyTimeSpent" value="458984000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -707,20 +711,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TODO.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="48" column="2" selection-start-line="48" selection-start-column="2" selection-end-line="48" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="115" column="22" selection-start-line="115" selection-start-column="22" selection-end-line="115" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Renderer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -730,11 +720,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sidenav/sidenavControl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="82" column="28" lean-forward="true" selection-start-line="82" selection-start-column="28" selection-end-line="82" selection-end-column="28" />
+        <state relative-caret-position="59">
+          <caret line="80" column="5" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
           <folding>
             <element signature="n#style#0;n#svg#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TODO.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="48" column="2" selection-start-line="48" selection-start-column="2" selection-end-line="48" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="69" column="141" selection-start-line="69" selection-start-column="141" selection-end-line="69" selection-end-column="141" />
         </state>
       </provider>
     </entry>

@@ -77,9 +77,25 @@ void GraphComposition::BCconstructor(){
 	for (int i = 0; i < cc->numberOfCCs(); i++){
 		Graph *SG = new Graph();
 		NodeArray<node> *nSG_to_nG = new NodeArray<node>();
-		//Monitor().getMemoryInformation();
-		ConnectedSubgraph<int>::call(*G,*SG, cc->v(cc->startNode(i)), *nSG_to_nG);
-		bc->push_back(new DynamicBCTree(*SG));
+		NodeArray<node> *nG_to_nSG = new NodeArray<node>();
+		EdgeArray<edge> *eSG_to_eG = new EdgeArray<edge>();
+		EdgeArray<edge> *eG_to_eSG = new EdgeArray<edge>();
+		//ConnectedSubgraph<int>::call(*G,*SG, cc->v(cc->startNode(i)), *nSG_to_nG);
+		ConnectedSubgraph<int>::call(*G, *SG, cc->v(cc->startNode(i)), *nSG_to_nG, *eSG_to_eG, *nG_to_nSG, *eG_to_eSG);
+		//this subgraph generate new id 
+		Graph *newCCGraph = new Graph();
+		node v;
+		std::map<int, node> *nodeid2node = new std::map<int, node>();
+		forall_nodes(v, *nSG_to_nG->graphOf()){
+			node n = newCCGraph->newNode((*nSG_to_nG)[v]->index());
+			nodeid2node->insert(std::pair<int, node>(n->index(), n));
+		}
+		edge e;
+		forall_edges(e, *eSG_to_eG->graphOf()){
+			edge currentEdge = (*eSG_to_eG)[e];
+			newCCGraph->newEdge(nodeid2node->find(currentEdge->source()->index())->second, nodeid2node->find(currentEdge->target()->index())->second, currentEdge->index());
+		}
+		bc->push_back(new DynamicBCTree(*newCCGraph));
 		//Monitor().getMemoryInformation();
 		//cout << cc->startNode(i) << "  " << cc->numberOfNodes(i) << "  " << cc->startNode(1) << endl;
 	}

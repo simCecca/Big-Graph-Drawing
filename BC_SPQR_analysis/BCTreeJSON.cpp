@@ -63,7 +63,7 @@ string BCTreeJSON::createBCTreeJSON(GraphComposition *composition, string name){
 				json->endArray();
 				//guardo all'interno del blocco biconnesso corrente, calcolo il max degree e prendo tutti i nodi con il min
 				//if ((*composition->getBCTree())[i]->numberOfNodes(v) >= 10 && v->firstAdj() != NULL){
-				if (v->firstAdj() != NULL){
+				if (v->firstAdj() != NULL){//when the current block has not a neighbour maybe he have just only the root of the bc-tree
 					node cT = v->firstAdj()->twinNode();
 					node cH = (*composition->getBCTree())[i]->cutVertex(cT, v);
 					Graph *SG = new Graph();
@@ -74,66 +74,67 @@ string BCTreeJSON::createBCTreeJSON(GraphComposition *composition, string name){
 					std::map<int, int> *nodeidbctree2nodeidoriginal = new std::map<int, int>();
 					int maxDegree = 0;
 					json->setKeyArrayName("innerGraph");
-					if (SG->numberOfNodes() <= 3000){
-						int maxNumber = 0;
-						forall_nodes(currentNode, *SG){
-							if (maxNumber <= 500){
-								json->setObjectKeyValue("name", currentNode->index());
-								json->setKeyValue("nameOriginal", (*composition->getBCTree())[i]->original(currentNode)->index());
-								json->setKeyValue("size", currentNode->degree());
-								json->endObject(1);
-							}
-							maxNumber++;
-						}
-						json->endArray();
-					}
-					else{
-						forall_nodes(currentNode, *SG){//find the max degree
-							if ((*composition->getBCTree())[i]->typeOfGNode(currentNode) == (*composition->getBCTree())[i]->Normal){
-								int degree = currentNode->degree();
-								if (degree > maxDegree)
-									maxDegree = degree;
-							}
-						}
-						int minDegree = log10(maxDegree) - 1; //int and not float because we wont the floor value
-						forall_nodes(currentNode, *SG){//save the important node in the json
+					forall_nodes(currentNode, *nSG_to_nG->graphOf()){//find the max degree
+						node originalCurrentNode = (*composition->getBCTree())[i]->original((*nSG_to_nG)[currentNode]);
+						if ((*composition->getBCTree())[i]->typeOfGNode(originalCurrentNode) != BCTree::CutVertex){
 							int degree = currentNode->degree();
-							if (log10(degree) >= minDegree){
-								node2degree->insert(std::pair<int, int>(currentNode->index(), degree));
-								nodeidbctree2nodeidoriginal->insert(std::pair<int, int>(currentNode->index(), (*composition->getBCTree())[i]->original(currentNode)->index()));
-							}
+							if (degree > maxDegree)
+								maxDegree = degree;
 						}
-
-						///////////////////////////////////////////////////////////SORTING////////////////////////////////////////////////////////////////
-						// Declaring the type of Predicate that accepts 2 pairs and return a bool
-						typedef std::function<bool(std::pair<int, int>, std::pair<int, int>)> Comparator;
-
-						// Defining a lambda function to compare two pairs. It will compare two pairs using second field
-						Comparator compFunctor = [](std::pair<int, int> elem1, std::pair<int, int> elem2)
-						{
-							if (elem1.second == elem2.second)
-								return elem1.first > elem2.first;
-							return elem1.second > elem2.second;
-						};
-
-						// Declaring a set that will store the pairs using above comparision logic
-						std::set<std::pair<int, int>, Comparator> setOfNodes(node2degree->begin(), node2degree->end(), compFunctor);
-						///////////////////////////////////////////////////////////END SORTING////////////////////////////////////////////////////////////
-						// Iterate over a set using range base for loop
-						int numberOfNodesInserted = 0;
-						for (std::pair<int, int> element : setOfNodes){
-							if (numberOfNodesInserted <= 3000){
-								json->setObjectKeyValue("name", element.first);
-								json->setKeyValue("nameOriginal", nodeidbctree2nodeidoriginal->find(element.first)->second);
-								json->setKeyValue("size", element.second);
-								json->endObject(1);
-								numberOfNodesInserted++;
-							}
-						}
-						delete node2degree;
-						delete nodeidbctree2nodeidoriginal;
-						json->endArray();
 					}
+					int minDegree = log10(maxDegree) - 1; //int and not float because we wont the floor value
+					int cNumber = 0;
+					forall_nodes(currentNode, *nSG_to_nG->graphOf()){//save the important node in the json
+						int degree = currentNode->degree();
+						if (log10(degree) >= minDegree || cNumber < 501){
+							node originalCurrentNode = (*composition->getBCTree())[i]->original((*nSG_to_nG)[currentNode]);
+							if ((*composition->getBCTree())[i]->typeOfGNode(originalCurrentNode) != BCTree::CutVertex){
+								node2degree->insert(std::pair<int, int>(originalCurrentNode->index(), degree));
+								cNumber++;
+							}
+						}
+					}
+
+					///////////////////////////////////////////////////////////SORTING////////////////////////////////////////////////////////////////
+					// Declaring the type of Predicate that accepts 2 pairs and return a bool
+					typedef std::function<bool(std::pair<int, int>, std::pair<int, int>)> Comparator;
+
+					// Defining a lambda function to compare two pairs. It will compare two pairs using second field
+					Comparator compFunctor = [](std::pair<int, int> elem1, std::pair<int, int> elem2)
+					{
+						if (elem1.second == elem2.second)
+							return elem1.first > elem2.first;
+						return elem1.second > elem2.second;
+					};
+
+					// Declaring a set that will store the pairs using above comparision logic
+					std::set<std::pair<int, int>, Comparator> setOfNodes(node2degree->begin(), node2degree->end(), compFunctor);
+					///////////////////////////////////////////////////////////END SORTING////////////////////////////////////////////////////////////
+					// Iterate over a set using range base for loop
+					int numberOfNodesInserted = 0;
+					for (std::pair<int, int> element : setOfNodes){
+						if (numberOfNodesInserted <= 3000){
+							json->setObjectKeyValue("name", element.first);
+							json->setKeyValue("nameOriginal", element.first);
+							json->setKeyValue("size", element.second);
+							json->endObject(1);
+							numberOfNodesInserted++;
+						}
+					}
+					delete node2degree;
+					delete nodeidbctree2nodeidoriginal;
+					json->endArray();
+				}
+				else{//the graph have just only the root 
+					node n;
+					json->setKeyArrayName("innerGraph");
+					forall_nodes(n, (*composition->getBCTree())[i]->originalGraph()){
+						json->setObjectKeyValue("name", n->index());
+						json->setKeyValue("nameOriginal", n->index());
+						json->setKeyValue("size", n->degree());
+						json->endObject(1);
+					}
+					json->endArray();
 				}
 				//for each Biconnected Components I create the corresponding SPQRTree
 				/*
@@ -145,11 +146,11 @@ string BCTreeJSON::createBCTreeJSON(GraphComposition *composition, string name){
 				}
 				*/
 				json->endObject(1);
+				if(numero % 20000 == 0) cout << "block " << numero << endl;
+				//cout << "block " << numero << endl;
+				numero++;
 			}
 			j++;
-
-			if(numero % 20000 == 0) cout << "block " << numero << endl;
-			numero++;
 		}
 		//end of this connected component
 		json->endArray();

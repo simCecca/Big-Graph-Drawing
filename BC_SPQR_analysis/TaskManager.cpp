@@ -81,18 +81,18 @@ void TaskManager::freeJson(){
 string TaskManager::getTheNeighbours(int nodeId){
 	string output = "";
 
-	int maxId = getIdOfTheMaxComponent();
+	int connectedComponent = findTheCC(nodeId);
 
-	node v = takeANodeInTheGraph(maxId, nodeId);
+	node v = takeANodeInTheGraph(connectedComponent, nodeId);
 	if (v != NULL){
 		output = "{ \"neighbours\": [";
-		output.append(getInformationAboutANode(v, maxId));
+		output.append(getInformationAboutANode(v, connectedComponent));
 		//find the all neightbours
 		adjEntry adj;
 		forall_adj(adj, v){
 			node currentNode = adj->twinNode();
 			output.append(",");
-			output.append(getInformationAboutANode(currentNode, maxId));
+			output.append(getInformationAboutANode(currentNode, connectedComponent));
 		}
 		output.append("]}");
 	}
@@ -100,69 +100,79 @@ string TaskManager::getTheNeighbours(int nodeId){
 }
 
 //get the block for a certain node from the client
+
 string TaskManager::getTheBlockOfANode(int nodeId){
 	string output = "";
 
-	int maxId = getIdOfTheMaxComponent();
-
+	int connectedComponent = findTheCC(nodeId);
 	//take the right biconnected block so the right original graph
-	node v = takeANodeInTheGraph(maxId, nodeId);
+	node v = takeANodeInTheGraph(connectedComponent, nodeId);
 	if (v != NULL){
-		output = getInformationAboutANode(v, maxId);
+		output = getInformationAboutANode(v, connectedComponent);
 	}
 	return output;
 }
+
+
 
 //take the shortest path
 string TaskManager::takeTheShortestPath(int idNode1, int idNode2){
 
 	//find the start node in the graph
 	//max components
-	int maxId = getIdOfTheMaxComponent();
-	node start = takeANodeInTheGraph(maxId, idNode1);
-	node target = takeANodeInTheGraph(maxId, idNode2);
+	int connectedComponentNode1 = findTheCC(idNode1);
+	int connectedComponentNode2 = findTheCC(idNode2);
 	
-	//bfs for the shortest path
-	NodeArray<node>(*fatherOfEachNode) = new NodeArray<node>((*composition->getBCTree())[maxId]->originalGraph());
-	NodeArray<bool> mark((*composition->getBCTree())[maxId]->originalGraph(), false);// original graph = (*composition->getBCTree())[maxId]->originalGraph()
-	SListPure<node> bfs;
-	bfs.pushBack(start);
-	// mark the starting node
-	mark[start] = true;
-	(*fatherOfEachNode)[start] = start;
-	bool found = false;//found = true when I find the target node
-	while (!bfs.empty() && !found) {
-		node w = bfs.popFrontRet();
-		adjEntry adj;
-		forall_adj(adj, w){
-			node v = adj->twinNode();
-			if (!mark[v]) {
-				mark[v] = true;
-				bfs.pushBack(v);
-				(*fatherOfEachNode)[v] = w;//set w as father of the current node v
-				if (v->index() == target->index()) found = true; //find the target node
+	node start = takeANodeInTheGraph(connectedComponentNode1, idNode1);
+	node target = takeANodeInTheGraph(connectedComponentNode2, idNode2);
+	string output = "";
+	if (connectedComponentNode1 == connectedComponentNode2){
+		//bfs for the shortest path
+		NodeArray<node>(*fatherOfEachNode) = new NodeArray<node>((*composition->getBCTree())[connectedComponentNode1]->originalGraph());
+		NodeArray<bool> mark((*composition->getBCTree())[connectedComponentNode1]->originalGraph(), false);// original graph = (*composition->getBCTree())[maxId]->originalGraph()
+		SListPure<node> bfs;
+		bfs.pushBack(start);
+		// mark the starting node
+		mark[start] = true;
+		(*fatherOfEachNode)[start] = start;
+		bool found = false;//found = true when I find the target node
+		while (!bfs.empty() && !found) {
+			node w = bfs.popFrontRet();
+			adjEntry adj;
+			forall_adj(adj, w){
+				node v = adj->twinNode();
+				if (!mark[v]) {
+					mark[v] = true;
+					bfs.pushBack(v);
+					(*fatherOfEachNode)[v] = w;//set w as father of the current node v
+					if (v->index() == target->index()) found = true; //find the target node
+				}
 			}
 		}
-	}
-	//create the output json
-	string output = "{ \"shortestpath\": [";
-	bool findRoot = false;
-	node currentNode = target;
-	output.append(getInformationAboutANode(target, maxId) + ",");
-	while (currentNode->index() != start->index()){
-		currentNode = (*fatherOfEachNode)[currentNode];
-		if (currentNode != NULL){
-			if (currentNode->index() == start->index())
-				findRoot = true;
-			else{
-				output.append(getInformationAboutANode(currentNode, maxId) + ",");
+		//create the output json
+		output = "{ \"shortestpath\": [";
+		bool findRoot = false;
+		node currentNode = target;
+		output.append(getInformationAboutANode(target, connectedComponentNode1) + ",");
+		while (currentNode->index() != start->index()){
+			currentNode = (*fatherOfEachNode)[currentNode];
+			if (currentNode != NULL){
+				if (currentNode->index() == start->index())
+					findRoot = true;
+				else{
+					output.append(getInformationAboutANode(currentNode, connectedComponentNode1) + ",");
+				}
 			}
 		}
+		output.append(getInformationAboutANode(start, connectedComponentNode1));
+		delete fatherOfEachNode;
 	}
-	output.append(getInformationAboutANode(start, maxId));
+	else{
+		output = "{ \"neighbours\": [";
+		output.append(getInformationAboutANode(start, connectedComponentNode1) + ",");
+		output.append(getInformationAboutANode(target, connectedComponentNode2));
+	}
 	output.append("]}");
-
-	delete fatherOfEachNode;
 	return output;
 }
 
